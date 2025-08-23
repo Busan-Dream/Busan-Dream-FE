@@ -8,6 +8,7 @@ import WrittenTestChart from "./components/Charts/WrittenTestChart";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/apis/api";
+import InterviewPractice from "../MainPage/components/InterviewPractice";
 
 type OrgInitial = "BTC" | "BMC" | "BISCO" | "BECO" | "BTO";
 
@@ -99,6 +100,7 @@ const JobPostingDetails = () => {
             postingFieldMethod={postingFieldMethod}
             postingCondition={postingCondition}
           />
+          <InterviewPractice />
         </section>
         <aside className="sticky top-[70px] right-0 w-[464px] space-y-[50px]">
           <CompanyInfo

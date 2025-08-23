@@ -99,7 +99,7 @@ const InterviewPractice = () => {
   };
 
   return (
-    <div className="interview_practice space-y-8 p-8">
+    <div className="interview_practice space-y-8 mt-8">
       {/* 면접 타입 선택 및 직무 카테고리 */}
       <div className="flex flex-col gap-6">
         {/* 면접 타입 선택 */}
@@ -124,7 +124,7 @@ const InterviewPractice = () => {
         <Button
           onClick={generateQuestion}
           disabled={!interviewType || loading}
-          className="w-full h-12 bg-gradient-to-r from-[#E4007F] to-[#4079ff] hover:from-[#D4007F] hover:to-[#3079ff]"
+          className="w-full h-12 transition-bg bg-gradient-to-r from-[#E4007F]/60 to-[#4079ff]/60 hover:from-[#D4007F] hover:to-[#3079ff]"
         >
           {loading ? "질문 생성 중..." : "면접 질문 생성"}
         </Button>
