@@ -1,6 +1,7 @@
 import {
   Bar,
   BarChart,
+  Cell,
   LabelList,
   ResponsiveContainer,
   XAxis,
@@ -83,6 +84,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+const COLORS = [
+  "oklch(0.809 0.105 251.813)", // 1번째 막대
+  "oklch(0.623 0.214 259.815)", // 2번째 막대
+  "oklch(0.546 0.245 262.881)", // 3번째 막대
+];
+
 const CompetitionChart = ({
   postingOrgan,
   postingYear,
@@ -158,11 +165,15 @@ const CompetitionChart = ({
                       <p className="text-gray-500">데이터 없음</p>
                     ) : (
                       <>
-                        <p className="text-blue-500">
+                        <p className="text-gray-900">
                           경쟁률{" "}
-                          {row.postingRate === 0
-                            ? "데이터 없음"
-                            : `${row.postingRate}:1`}
+                          <span
+                            className={`${row.postingRate === 0 ? "text-gray-600" : "text-blue-500"}`}
+                          >
+                            {row.postingRate === 0
+                              ? "데이터 없음"
+                              : `${row.postingRate}:1`}
+                          </span>
                         </p>
                         <p className="text-gray-500">
                           선발인원 {row.postingSelectedNumber ?? "-"} / 지원인원{" "}
@@ -180,23 +191,32 @@ const CompetitionChart = ({
               radius={5}
               maxBarSize={40}
             >
+              {chartData.map((_, idx) => (
+                <Cell key={idx} fill={COLORS[idx]} />
+              ))}
               <LabelList
                 dataKey="postingRate"
-                position="insideRight"
-                offset={8}
-                content={({ x, y, width, height, value }) => {
-                  if (x == null || y == null) return null;
+                // position="insideRight" 는 0일 때 축에 딱 붙어버림 → 커스텀으로 제어
+                content={({ x = 0, y = 0, width = 0, height = 0, value }) => {
+                  const cy = Number(y) + Number(height) / 2;
+                  const xEnd = Number(x) + Number(width);
+                  const isZero = Number(value) === 0;
+
+                  // 0이면 바깥쪽(축 오른쪽)으로, 0이 아니면 막대 안쪽 우측으로
+                  const labelX = isZero ? xEnd + 8 : xEnd - 8;
+                  const anchor = isZero ? "start" : "end";
+                  const fill = isZero ? "#666" : "#fff";
 
                   return (
                     <text
-                      x={Number(x) + Number(width) + 5}
-                      y={Number(y) + Number(height) / 2}
-                      fill={value === 0 ? "#888" : "#fff"}
+                      x={labelX}
+                      y={cy}
+                      fill={fill}
                       fontSize={14}
-                      textAnchor="end"
+                      textAnchor={anchor}
                       alignmentBaseline="middle"
                     >
-                      {value === 0 ? "데이터 없음" : `${value} : 1`}
+                      {isZero ? "데이터 없음" : `${value} : 1`}
                     </text>
                   );
                 }}
