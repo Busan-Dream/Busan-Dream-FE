@@ -1,4 +1,3 @@
-import Footer from "@/components/Footer";
 import Banner from "./components/Banner";
 import Filter from "./components/Filter";
 import JobPosting from "./components/JobPosting";
@@ -8,9 +7,12 @@ const Main = () => {
   return (
     <div className="main">
       {/* 배너 */}
-      <section role="banner" className="mt-[30px] mb-[50px] h-[250px]">
+      <section
+        role="banner"
+        className="mt-[30px] mb-[50px] h-[250px] flex gap-6"
+      >
         <Banner />
-        <div style={{ height: "600px", position: "relative" }}>
+        <div style={{ height: "100%", position: "relative" }}>
           <Carousel
             baseWidth={300}
             autoplay={true}
@@ -24,7 +26,6 @@ const Main = () => {
       <main className="flex flex-col gap-[50px] px-5 2xl:px-0">
         <JobPosting />
       </main>
-      <Footer />
     </div>
   );
 };

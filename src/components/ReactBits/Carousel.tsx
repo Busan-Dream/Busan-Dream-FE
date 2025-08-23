@@ -2,19 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import { motion, PanInfo, useMotionValue, useTransform } from "motion/react";
 import React, { JSX } from "react";
 import ShortcutIcon from "@/assets/icons/shortcut-icon.svg?react";
-// replace icons with your own if needed
-import {
-  FiCircle,
-  FiCode,
-  FiFileText,
-  FiLayers,
-  FiLayout,
-} from "react-icons/fi";
+
 export interface CarouselItem {
   title: string;
   description: string;
   id: number;
   icon: React.ReactNode;
+  link: string;
 }
 
 export interface CarouselProps {
@@ -29,36 +23,37 @@ export interface CarouselProps {
 
 const DEFAULT_ITEMS: CarouselItem[] = [
   {
-    title: "부산의 청년을 위한 정책",
+    title: "부산 거주 청년 정책",
     description: "현재 법적 주소지가 부산인 청년을 위한 정책을 소개해드려요!",
     id: 1,
     icon: <ShortcutIcon className="h-[14px] w-[14px] text-white" />,
+    link: "/policy/busan",
   },
   {
-    title: "부산 외 청년을 위한 정책",
+    title: "부산 이주 청년 정책",
     description:
-      "현재 법적 주소지가 부산이 아닌 청년을 위한 정책을 소개해드려요!",
+      "부산광역시에 정착을 고민중인 타 시/군/구 청년을 위한 정책을 소개해드려요!",
     id: 2,
     icon: <ShortcutIcon className="h-[14px] w-[14px] text-white" />,
+    link: "/policy/others",
   },
   {
-    title: "Components",
-    description: "Reusable components for your projects.",
+    title: "취업연수생 | 인턴 체험",
+    description:
+      "만29세 이하를 위한 취업지원 프로그램",
     id: 3,
-    icon: <FiLayers className="h-[16px] w-[16px] text-white" />,
+    icon: <ShortcutIcon className="h-[14px] w-[14px] text-white" />,
+    link: "https://www.busanjob.net/08_wyou/wyou05_0.asp",
   },
   {
-    title: "Backgrounds",
-    description: "Beautiful backgrounds and patterns for your projects.",
+    title: "중개보수 및 이사비 지원",
+    description:
+      "중위소득 120% 이하를 위한 실제 이사비 지원",
     id: 4,
-    icon: <FiLayout className="h-[16px] w-[16px] text-white" />,
+    icon: <ShortcutIcon className="h-[14px] w-[14px] text-white" />,
+    link: "https://young.busan.go.kr/index.nm?menuCd=271",
   },
-  {
-    title: "Common UI",
-    description: "Common UI components are coming soon!",
-    id: 5,
-    icon: <FiCode className="h-[16px] w-[16px] text-white" />,
-  },
+
 ];
 
 const DRAG_BUFFER = 0;
@@ -174,6 +169,9 @@ export default function Carousel({
         width: `${baseWidth}px`,
         ...(round && { height: `${baseWidth}px` }),
       }}
+      onClick={() => {
+        window.open(carouselItems[currentIndex].link, "_blank");
+      }}
     >
       <motion.div
         className="flex"
@@ -218,7 +216,7 @@ export default function Carousel({
               transition={effectiveTransition}
             >
               <div className={`${round ? "p-0 m-0" : "mb-4 p-5"}`}>
-                <span className="flex h-[28px] w-[28px] items-center justify-center rounded-full bg-[#060010]">
+                <span className="flex h-[28px] w-[28px] items-center justify-center rounded-full bg-[#5F1984]/60">
                   {item.icon}
                 </span>
               </div>

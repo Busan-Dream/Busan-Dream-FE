@@ -78,9 +78,9 @@ const Footer = () => {
               name="정은아"
               githubId="eunah0507"
             />
-            <MemberInfo role="AI/BE" name="오의석" githubId="ohuseok" />
+            <MemberInfo role="AI/BE" name="오의석" githubId="ohuiseok" />
             <MemberInfo role="디자인/FE" name="김보민" githubId="WHOOZ-23" />
-            <MemberInfo role="디자인/FE" name="권윤솔" githubId="miseultang" />
+            <MemberInfo role="디자인/FE" name="권윤슬" githubId="miseullang" />
           </div>
         </div>
       </div>
