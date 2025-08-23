@@ -59,3 +59,23 @@ export const getPolicyListByCategory = async (
     maxPage: response.maxPage,
   };
 };
+
+// 다중 카테고리 정책 목록 조회
+export const getPolicyListByCategories = async (
+  categories: PolicyPart[],
+  params: PolicyListRequest
+): Promise<{ policies: Policy[]; maxPage: number }> => {
+  const response = await getPolicyList(params);
+
+  // 선택된 카테고리들의 정책을 모두 합치기
+  const allPolicies: Policy[] = [];
+  categories.forEach((category) => {
+    const categoryPolicies = response[category] || [];
+    allPolicies.push(...categoryPolicies);
+  });
+
+  return {
+    policies: allPolicies,
+    maxPage: response.maxPage,
+  };
+};

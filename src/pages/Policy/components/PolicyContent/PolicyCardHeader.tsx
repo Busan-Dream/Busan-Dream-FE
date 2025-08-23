@@ -1,10 +1,12 @@
 import React from "react";
-import { Calendar, Home, Heart, Sparkles } from "lucide-react";
+import { Calendar, Home, Heart, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface PolicyCardHeader {
   id: string;
   icon: React.ReactNode;
   title: string;
+  path: string;
 }
 
 const PolicyCardHeaders: PolicyCardHeader[] = [
@@ -12,29 +14,34 @@ const PolicyCardHeaders: PolicyCardHeader[] = [
     id: "work",
     icon: <Calendar className="w-6 h-6" />,
     title: "일자리",
+    path: "work",
   },
   {
-    id: "housing",
+    id: "house",
     icon: <Home className="w-6 h-6" />,
     title: "주거",
+    path: "house",
   },
   {
     id: "life",
     icon: <Heart className="w-6 h-6" />,
     title: "생활",
+    path: "life",
   },
   {
-    id: "settlement",
-    icon: <Sparkles className="w-6 h-6" />,
-    title: "정착",
+    id: "busan",
+    icon: <MapPin className="w-6 h-6" />,
+    title: "부산",
+    path: "busan",
   },
 ];
 
 interface PolicyCardHeaderProps {
   category: string;
+  onMoreClick?: (categoryPath: string) => void;
 }
 
-const PolicyCardHeader = ({ category }: PolicyCardHeaderProps) => {
+const PolicyCardHeader = ({ category, onMoreClick }: PolicyCardHeaderProps) => {
   const headerData = PolicyCardHeaders.find((header) => header.id === category);
 
   if (!headerData) return null;
@@ -45,9 +52,16 @@ const PolicyCardHeader = ({ category }: PolicyCardHeaderProps) => {
         {headerData.icon}
         <h3 className="text-2xl font-bold text-gray-900">{headerData.title}</h3>
       </div>
-      <button className="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors">
-        더보기
-      </button>
+      {onMoreClick && (
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => onMoreClick(headerData.path)}
+          className="flex items-center gap-1 text-gray-600 hover:text-gray-900"
+        >
+          더보기
+        </Button>
+      )}
     </div>
   );
 };
