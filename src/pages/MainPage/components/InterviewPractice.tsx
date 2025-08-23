@@ -173,24 +173,50 @@ const InterviewPractice = () => {
         </div>
       )}
 
-      {/* 답변 입력 */}
+      {/* 답변 비교 섹션 */}
       {question && (
         <div className="space-y-6">
-          <h2 className="text-xl font-semibold mb-6">내 답변</h2>
-          <p className="text-gray-600 mb-4">
-            질문에 대한 답변을 작성해보세요. 답변은 자동으로 저장됩니다.
-          </p>
-          <Textarea
-            placeholder="여기에 답변을 작성하세요..."
-            value={userAnswer}
-            onChange={(e) => setUserAnswer(e.target.value)}
-            className="min-h-[200px] text-base leading-relaxed"
-          />
+          <h2 className="text-2xl font-semibold mb-6">답변 작성 및 비교</h2>
+
+          <div className="grid grid-cols-2 gap-8">
+            {/* 내 답변 */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-800">내 답변</h3>
+              <Textarea
+                placeholder="여기에 답변을 작성하세요..."
+                value={userAnswer}
+                onChange={(e) => setUserAnswer(e.target.value)}
+                className="min-h-[300px] text-base leading-relaxed resize-none"
+              />
+            </div>
+
+            {/* AI 답변 */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-800">
+                AI 추천 답변
+              </h3>
+              {!aiAnswer ? (
+                <div className="min-h-[300px] flex items-center justify-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                  <div className="text-center text-gray-500">
+                    <p className="mb-2">답변을 작성한 후</p>
+                    <p>"AI 추천 답변 보기" 버튼을 클릭하세요</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <p className="text-gray-800 leading-relaxed">
+                      {aiAnswer.answer}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
-
       {/* AI 답변 생성 버튼 */}
-      {question && userAnswer && (
+      {question && userAnswer && !aiAnswer && (
         <div className="text-center">
           <Button
             onClick={generateAIAnswer}
@@ -206,70 +232,43 @@ const InterviewPractice = () => {
       {/* AI 답변 표시 */}
       {aiAnswer && (
         <div className="space-y-6">
-          <h2 className="text-2xl font-semibold mb-2">AI 추천 답변</h2>
-          <p className="text-gray-600 mb-6">
-            AI가 생성한 모범 답변입니다. 내 답변과 비교해보세요.
-          </p>
-
-          <div className="space-y-6">
-            {/* AI 답변 */}
-            <div className="flex flex-col gap-2">
-              <label className="text-lg font-medium text-gray-700">
-                AI 답변
-              </label>
-              <div className="p-6 bg-green-50 rounded-lg border-green-500">
-                <p className="text-gray-800 text-lg leading-relaxed">
-                  {aiAnswer.answer}
-                </p>
-              </div>
+          {/* 핵심 포인트 */}
+          <div className="flex flex-col gap-2">
+            <label className="text-lg font-medium text-gray-700">
+              핵심 포인트
+            </label>
+            <div className="flex gap-2">
+              {aiAnswer.key_points.map((point, index) => (
+                <div key={index} className="p-3 rounded-lg bg-gray-100">
+                  <p className="text-gray-700">{point}</p>
+                </div>
+              ))}
             </div>
+          </div>
 
-            {/* 핵심 포인트 */}
-            <div className="flex flex-col gap-2">
-              <label className="text-lg font-medium text-gray-700">
-                핵심 포인트
-              </label>
-              <div className="flex gap-2">
-                {aiAnswer.key_points.map((point, index) => (
-                  <div key={index} className="p-3 rounded-lg bg-gray-100">
-                    <p className="text-gray-700">{point}</p>
-                  </div>
-                ))}
-              </div>
+          {/* 답변 팁 */}
+          <div className="flex flex-col gap-2">
+            <label className="text-lg font-medium text-gray-700">답변 팁</label>
+            <div className="flex gap-2">
+              {aiAnswer.answer_tips.map((tip, index) => (
+                <div key={index} className="p-3 rounded-lg bg-gray-100">
+                  <p className="text-gray-700"> {tip}</p>
+                </div>
+              ))}
             </div>
+          </div>
 
-            {/* 답변 팁 */}
-            <div className="flex flex-col gap-2">
-              <label className="text-lg font-medium text-gray-700">
-                답변 팁
-              </label>
-              <div className="flex gap-2">
-                {aiAnswer.answer_tips.map((tip, index) => (
-                  <div
-                    key={index}
-                    className="p-3 rounded-lg bg-gray-100"
-                  >
-                    <p className="text-gray-700"> {tip}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 평가 포인트 */}
-            <div className="flex flex-col gap-2">
-              <label className="text-lg font-medium text-gray-700">
-                평가 포인트
-              </label>
-              <div className="flex gap-2">
-                {aiAnswer.evaluation_focus.map((focus, index) => (
-                  <div
-                    key={index}
-                    className="p-3 rounded-lg bg-gray-100"
-                  >
-                    <p className="text-gray-700"> {focus}</p>
-                  </div>
-                ))}
-              </div>
+          {/* 평가 포인트 */}
+          <div className="flex flex-col gap-2">
+            <label className="text-lg font-medium text-gray-700">
+              평가 포인트
+            </label>
+            <div className="flex gap-2">
+              {aiAnswer.evaluation_focus.map((focus, index) => (
+                <div key={index} className="p-3 rounded-lg bg-gray-100">
+                  <p className="text-gray-700"> {focus}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
