@@ -50,7 +50,9 @@ const PolicyCardHeader = ({ category, onMoreClick }: PolicyCardHeaderProps) => {
     <div className="flex justify-between items-center mb-6">
       <div className="flex items-center gap-3">
         {headerData.icon}
-        <h3 className="text-2xl font-bold text-gray-900">{headerData.title}</h3>
+        <h3 className="text-2xl font-medium text-gray-900">
+          {headerData.title}
+        </h3>
       </div>
       {onMoreClick && (
         <Button

@@ -27,24 +27,24 @@ const PolicyCard = ({ policy }: PolicyCardProps) => {
   };
 
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100 max-w-sm">
+    <div className="bg-white rounded-xl p-6 border border-gray-200 max-w-sm cursor-pointer flex flex-col justify-between gap-4">
       {/* 맨 위 - 부산 내/외 배지 */}
-      <div className="mb-4">
-        <Badge
-          variant="secondary"
-          className="bg-black text-white hover:bg-black/90"
-        >
-          {policy.policyBusan || "지역 정보 없음"}
-        </Badge>
+      <Badge
+        variant="secondary"
+        className="bg-black text-white hover:bg-black/90"
+      >
+        {policy.policyBusan || "지역 정보 없음"}
+      </Badge>
+
+      <div className="flex flex-col gap-1">
+        {/* 메인 제목 */}
+        <h3 className="text-lg text-black mb-2 leading-tight">
+          {policy.policyTitle || "제목 없음"}
+        </h3>
+
+        {/* 날짜/상태 */}
+        <p className="text-sm text-gray-500">{getStatusText()}</p>
       </div>
-
-      {/* 메인 제목 */}
-      <h3 className="text-lg text-black mb-2 leading-tight">
-        {policy.policyTitle || "제목 없음"}
-      </h3>
-
-      {/* 날짜/상태 */}
-      <p className="text-sm text-gray-500 mb-6">{getStatusText()}</p>
 
       {/* 맨 아래 - 태그들 */}
       <div className="flex flex-wrap gap-2">
