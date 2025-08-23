@@ -2,26 +2,12 @@ import { usePolicyList } from "@/hooks/usePolicyList";
 import PolicyCard from "./PolicyCard";
 import DecryptedText from "@/components/ReactBits/DecryptedText/DecryptedText";
 import { Button } from "@/components/ui/button";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Calendar,
-  Home,
-  Heart,
-  MapPin,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface CategoryPolicyContentProps {
   category: "work" | "house" | "busan" | "life";
   policyBusan?: "부산내" | "부산외" | "공통";
 }
-
-const categoryInfo = {
-  work: { label: "일자리", icon: Calendar },
-  house: { label: "주거", icon: Home },
-  busan: { label: "부산", icon: MapPin },
-  life: { label: "생활", icon: Heart },
-};
 
 const CategoryPolicyContent = ({
   category,
@@ -43,10 +29,6 @@ const CategoryPolicyContent = ({
     policyBusan,
     initialPage: 1,
   });
-
-  const categoryData = categoryInfo[category];
-  const IconComponent = categoryData.icon;
-  const locationText = policyBusan === "부산내" ? "부산의" : "부산 외";
 
   if (loading) {
     return (
@@ -83,14 +65,6 @@ const CategoryPolicyContent = ({
 
   return (
     <section className="flex flex-col gap-[50px] max-w-[1200px] mx-auto max-[1200px]:px-10">
-      {/* 카테고리 헤더 */}
-      <div className="flex items-center gap-3 border-b border-blue-300 pb-4">
-        <IconComponent className="w-6 h-6 text-blue-600" />
-        <h1 className="text-2xl font-bold text-gray-900">
-          {locationText} 청년 정책 | {categoryData.label}
-        </h1>
-      </div>
-
       {/* 정책 카드 목록 */}
       {policies.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

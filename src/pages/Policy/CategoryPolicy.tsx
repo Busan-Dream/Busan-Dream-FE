@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import PolicyHeader from "./components/PolicyHeader";
 import CategoryPolicyContent from "./components/PolicyContent/CategoryPolicyContent";
 import PolicyFooter from "./components/PolicyFooter";
@@ -13,11 +13,21 @@ const CategoryPolicy = () => {
   const policyBusan = location === "busan" ? "부산내" : "부산외";
   const isFromBusan = location === "busan";
 
+  const categoryInfo = {
+    work: "일자리",
+    house: "주거",
+    busan: "부산",
+    life: "생활",
+  };
+
   // 유효하지 않은 카테고리 처리
   if (!category || !["work", "house", "busan", "life"].includes(category)) {
     return (
       <section>
-        <PolicyHeader isFromBusan={isFromBusan} />
+        <PolicyHeader
+          isFromBusan={isFromBusan}
+          category={category ? categoryInfo[category] : undefined}
+        />
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
@@ -33,7 +43,10 @@ const CategoryPolicy = () => {
 
   return (
     <section>
-      <PolicyHeader isFromBusan={isFromBusan} />
+      <PolicyHeader
+        isFromBusan={isFromBusan}
+        category={categoryInfo[category]}
+      />
       <CategoryPolicyContent category={category} policyBusan={policyBusan} />
       <div className="relative">
         <PolicyFooter />
