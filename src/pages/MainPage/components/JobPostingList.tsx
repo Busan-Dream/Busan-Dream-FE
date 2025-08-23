@@ -84,7 +84,7 @@ const JobPostingList = ({
                   postingTitle={postingTitle}
                   acceptStartDate={acceptStartDate}
                   acceptEndDate={acceptEndDate}
-                  postingTag={postingTag}
+                  postingTag={postingTag.slice(0, 2)}
                 />
               </li>
             )
