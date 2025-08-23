@@ -1,13 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -24,7 +17,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 const InterviewPractice = () => {
-  const [interviewType, setInterviewType] = useState<string>("");
+  const [interviewType, setInterviewType] = useState<string>("토론면접");
   const [question, setQuestion] = useState<InterviewQuestionResponse | null>(
     null
   );
@@ -34,6 +27,7 @@ const InterviewPractice = () => {
   );
   const [loading, setLoading] = useState<boolean>(false);
   const [aiLoading, setAiLoading] = useState<boolean>(false);
+  const [jobCategory, setJobCategory] = useState<string>("기계직");
 
   const interviewTypes = [
     { value: "토론면접", label: "토론면접" },
@@ -105,109 +99,105 @@ const InterviewPractice = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>면접 연습</CardTitle>
-          <CardDescription>
-            AI와 함께 면접 연습을 해보세요. 면접 타입을 선택하고 질문을 생성한
-            후, 답변을 작성해보세요.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* 면접 타입 선택 */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">면접 타입</label>
-            <Select value={interviewType} onValueChange={setInterviewType}>
-              <SelectTrigger>
-                <SelectValue placeholder="면접 타입을 선택하세요" />
-              </SelectTrigger>
-              <SelectContent>
-                {interviewTypes.map((type) => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Button
-              onClick={generateQuestion}
-              disabled={!interviewType || loading}
-              className="w-full"
-            >
-              {loading ? "질문 생성 중..." : "면접 질문 생성"}
-            </Button>
-          </div>
+    <div className="interview_practice space-y-8 p-8">
+      {/* 면접 타입 선택 및 직무 카테고리 */}
+      <div className="flex flex-col gap-6">
+        {/* 면접 타입 선택 */}
+        <h3 className="flex gap-2 items-center text-xl font-semibold">
+          <span>{jobCategory}</span>
+          <Select value={interviewType} onValueChange={setInterviewType}>
+            <SelectTrigger className="h-12">
+              <SelectValue placeholder="면접 타입을 선택하세요" />
+            </SelectTrigger>
+            <SelectContent>
+              {interviewTypes.map((type) => (
+                <SelectItem key={type.value} value={type.value}>
+                  {type.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          을 준비하고 계신가요?
+        </h3>
 
-          {/* 직무 카테고리 */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">직무 카테고리</label>
-            <div className="p-3 bg-gray-50 rounded-md border">
-              <span className="text-gray-700">기계직</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+        {/* 질문 생성 버튼 */}
+        <Button
+          onClick={generateQuestion}
+          disabled={!interviewType || loading}
+          className="w-full h-12 bg-gradient-to-r from-[#E4007F] to-[#4079ff] hover:from-[#D4007F] hover:to-[#3079ff]"
+        >
+          {loading ? "질문 생성 중..." : "면접 질문 생성"}
+        </Button>
+      </div>
 
       {/* 면접 질문 표시 */}
       {question && (
-        <Card>
-          <CardHeader>
-            <CardTitle>면접 질문</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">질문</label>
-              <div className="p-4 bg-blue-50 rounded-md border-l-4 border-blue-500">
-                <p className="text-gray-800">{question.question}</p>
+        <div className="space-y-6">
+          {/* 질문 */}
+          <div className="space-y-6">
+            <div className="flex flex-col gap-2">
+              <label className="text-lg font-medium text-gray-700">질문</label>
+              <div className="p-6 bg-gray-50 rounded-lg border-gray-500">
+                <p className="text-gray-800 text-lg leading-relaxed">
+                  {question.question}
+                </p>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">핵심 포인트</label>
-              <div className="p-3 bg-gray-50 rounded-md">
-                <p className="text-gray-700">{question.evaluation_criteria}</p>
+            {/* 핵심 포인트 */}
+            <div className="flex flex-col gap-2">
+              <label className="text-lg font-medium text-gray-700">
+                핵심 포인트
+              </label>
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <p className="text-gray-700 leading-relaxed">
+                  {question.evaluation_criteria}
+                </p>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">키워드</label>
+            {/* 키워드 */}
+            <div className="flex flex-col gap-2">
+              <label className="text-lg font-medium text-gray-700">
+                키워드
+              </label>
               <div className="flex flex-wrap gap-2">
                 {question.keywords.map((keyword, index) => (
-                  <Badge key={index} variant="secondary">
+                  <Badge key={index} className="h-7 px-3 text-md">
                     {keyword}
                   </Badge>
                 ))}
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
       {/* 답변 입력 */}
       {question && (
-        <Card>
-          <CardHeader>
-            <CardTitle>내 답변</CardTitle>
-            <CardDescription>
-              질문에 대한 답변을 작성해보세요. 답변은 자동으로 저장됩니다.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Textarea
-              placeholder="여기에 답변을 작성하세요..."
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              className="min-h-[200px]"
-            />
-          </CardContent>
-        </Card>
+        <div className="space-y-6">
+          <h2 className="text-xl font-semibold mb-6">내 답변</h2>
+          <p className="text-gray-600 mb-4">
+            질문에 대한 답변을 작성해보세요. 답변은 자동으로 저장됩니다.
+          </p>
+          <Textarea
+            placeholder="여기에 답변을 작성하세요..."
+            value={userAnswer}
+            onChange={(e) => setUserAnswer(e.target.value)}
+            className="min-h-[200px] text-base leading-relaxed"
+          />
+        </div>
       )}
 
       {/* AI 답변 생성 버튼 */}
       {question && userAnswer && (
         <div className="text-center">
-          <Button onClick={generateAIAnswer} disabled={aiLoading} size="lg">
+          <Button
+            onClick={generateAIAnswer}
+            disabled={aiLoading}
+            size="lg"
+            className="h-12 px-8 bg-gradient-to-r from-[#E4007F] to-[#4079ff] hover:from-[#D4007F] hover:to-[#3079ff]"
+          >
             {aiLoading ? "AI 답변 생성 중..." : "AI 추천 답변 보기"}
           </Button>
         </div>
@@ -215,61 +205,74 @@ const InterviewPractice = () => {
 
       {/* AI 답변 표시 */}
       {aiAnswer && (
-        <Card>
-          <CardHeader>
-            <CardTitle>AI 추천 답변</CardTitle>
-            <CardDescription>
-              AI가 생성한 모범 답변입니다. 내 답변과 비교해보세요.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">AI 답변</label>
-              <div className="p-4 bg-green-50 rounded-md border-l-4 border-green-500">
-                <p className="text-gray-800">{aiAnswer.answer}</p>
+        <div className="space-y-6">
+          <h2 className="text-2xl font-semibold mb-2">AI 추천 답변</h2>
+          <p className="text-gray-600 mb-6">
+            AI가 생성한 모범 답변입니다. 내 답변과 비교해보세요.
+          </p>
+
+          <div className="space-y-6">
+            {/* AI 답변 */}
+            <div className="flex flex-col gap-2">
+              <label className="text-lg font-medium text-gray-700">
+                AI 답변
+              </label>
+              <div className="p-6 bg-green-50 rounded-lg border-green-500">
+                <p className="text-gray-800 text-lg leading-relaxed">
+                  {aiAnswer.answer}
+                </p>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">핵심 포인트</label>
-              <div className="space-y-2">
+            {/* 핵심 포인트 */}
+            <div className="flex flex-col gap-2">
+              <label className="text-lg font-medium text-gray-700">
+                핵심 포인트
+              </label>
+              <div className="flex gap-2">
                 {aiAnswer.key_points.map((point, index) => (
-                  <div key={index} className="p-2 bg-gray-50 rounded-md">
-                    <p className="text-gray-700">• {point}</p>
+                  <div key={index} className="p-3 rounded-lg bg-gray-100">
+                    <p className="text-gray-700">{point}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">답변 팁</label>
-              <div className="space-y-2">
+            {/* 답변 팁 */}
+            <div className="flex flex-col gap-2">
+              <label className="text-lg font-medium text-gray-700">
+                답변 팁
+              </label>
+              <div className="flex gap-2">
                 {aiAnswer.answer_tips.map((tip, index) => (
                   <div
                     key={index}
-                    className="p-2 bg-yellow-50 rounded-md border-l-4 border-yellow-500"
+                    className="p-3 rounded-lg bg-gray-100"
                   >
-                    <p className="text-gray-700">💡 {tip}</p>
+                    <p className="text-gray-700"> {tip}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">평가 포인트</label>
-              <div className="space-y-2">
+            {/* 평가 포인트 */}
+            <div className="flex flex-col gap-2">
+              <label className="text-lg font-medium text-gray-700">
+                평가 포인트
+              </label>
+              <div className="flex gap-2">
                 {aiAnswer.evaluation_focus.map((focus, index) => (
                   <div
                     key={index}
-                    className="p-2 bg-blue-50 rounded-md border-l-4 border-blue-500"
+                    className="p-3 rounded-lg bg-gray-100"
                   >
-                    <p className="text-gray-700">🎯 {focus}</p>
+                    <p className="text-gray-700"> {focus}</p>
                   </div>
                 ))}
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
     </div>
   );
