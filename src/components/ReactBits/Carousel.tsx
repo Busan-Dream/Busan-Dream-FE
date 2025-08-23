@@ -251,7 +251,7 @@ export default function Carousel({
                   : "bg-[rgba(51,51,51,0.4)]"
               }`}
               animate={{
-                scale: currentIndex % items.length === index ? 1.2 : 1,
+                scale: currentIndex % items.lenh === index ? 1.2 : 1,
               }}
               onClick={() => setCurrentIndex(index)}
               transition={{ duration: 0.15 }}
