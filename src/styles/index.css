@@ -195,3 +195,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+.carousel-background {
+  background: linear-gradient(
+    116.5deg,
+    rgba(234, 99, 160, 0.04) -2.32%,
+    rgba(197, 59, 187, 0.108462) 24.1%,
+    rgba(146, 5, 222, 0.2) 59.42%
+  );
+}
