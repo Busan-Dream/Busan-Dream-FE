@@ -264,17 +264,17 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
         </div>
 
         {/* 근무분야 */}
-        <div className="flex h-auto w-full items-center space-x-5 border-b-1 border-b-gray-200 px-[30px] py-5">
+        <div className="grid h-auto w-full grid-cols-[80px_1fr] items-center gap-5 border-b-1 border-b-gray-200 px-[30px] py-5">
           <span className="w-20 text-center text-base">근무분야</span>
           <div className="flex flex-wrap gap-[10px]">
             {parts.map(part => {
               const isSelected =
                 tagList.includes(part) ||
-                searchKeywords.postingPart.includes(part); // 시각 상태와 부모 상태 둘 다 참조(선택사항)
+                searchKeywords.postingPart.includes(part);
               return (
                 <span
                   key={part}
-                  className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold ${
+                  className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold select-none ${
                     isSelected
                       ? "bg-blue-500 text-white"
                       : "border-1 border-gray-300 text-gray-400"
@@ -290,7 +290,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
 
         {/* 전형/고용형태 */}
         <div className="grid grid-cols-2 border-b-1 border-b-gray-200">
-          <div className="flex h-auto w-full items-center space-x-5 border-r-1 border-r-gray-200 px-[30px] py-5">
+          <div className="grid h-auto w-full grid-cols-[80px_1fr] items-center gap-5 border-r-1 border-r-gray-200 px-[30px] py-5">
             <span className="w-20 text-center text-base">전형</span>
             <div className="flex flex-wrap gap-[10px]">
               {fields.map(field => {
@@ -300,7 +300,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
                 return (
                   <span
                     key={field}
-                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold ${
+                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold select-none ${
                       isSelected
                         ? "bg-blue-500 text-white"
                         : "border-1 border-gray-300 text-gray-400"
@@ -313,7 +313,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
               })}
             </div>
           </div>
-          <div className="flex h-auto w-full items-center space-x-5 border-r-1 border-r-gray-200 px-[30px] py-5">
+          <div className="grid h-auto w-full grid-cols-[80px_1fr] items-center gap-5 border-r-1 border-r-gray-200 px-[30px] py-5">
             <span className="w-20 text-center text-base">고용형태</span>
             <div className="flex flex-wrap gap-[10px]">
               {employmentTypes.map(type => {
@@ -323,7 +323,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
                 return (
                   <span
                     key={type}
-                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold ${
+                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold select-none ${
                       isSelected
                         ? "bg-blue-500 text-white"
                         : "border-1 border-gray-300 text-gray-400"
@@ -340,7 +340,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
 
         {/* 학력/상태 */}
         <div className="grid grid-cols-2 border-b-1 border-b-gray-200">
-          <div className="flex h-auto w-full items-center space-x-5 border-r-1 border-r-gray-200 px-[30px] py-5">
+          <div className="grid h-auto w-full grid-cols-[80px_1fr] items-center gap-5 border-r-1 border-r-gray-200 px-[30px] py-5">
             <span className="w-20 text-center text-base">학력</span>
             <div className="flex flex-wrap gap-[10px]">
               {education.map(edu => {
@@ -350,7 +350,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
                 return (
                   <span
                     key={edu}
-                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold ${
+                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold select-none ${
                       isSelected
                         ? "bg-blue-500 text-white"
                         : "border-1 border-gray-300 text-gray-400"
@@ -363,7 +363,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
               })}
             </div>
           </div>
-          <div className="flex h-auto w-full items-center space-x-5 border-r-1 border-r-gray-200 px-[30px] py-5">
+          <div className="grid h-auto w-full grid-cols-[80px_1fr] items-center gap-5 border-r-1 border-r-gray-200 px-[30px] py-5">
             <span className="w-20 text-center text-base">상태</span>
             <div className="flex flex-wrap gap-[10px]">
               {status.map(stat => {
@@ -373,7 +373,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
                 return (
                   <span
                     key={stat}
-                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold ${
+                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold select-none ${
                       isSelected
                         ? "bg-blue-500 text-white"
                         : "border-1 border-gray-300 text-gray-400"
@@ -389,7 +389,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
         </div>
 
         {/* 요구조건 */}
-        <div className="flex h-auto w-full items-center space-x-5 border-b-1 border-b-gray-200 px-[30px] py-5">
+        <div className="grid h-auto w-full grid-cols-[80px_1fr] items-center gap-5 border-b-1 border-b-gray-200 px-[30px] py-5">
           <span className="w-20 text-center text-base">요구조건</span>
           <div className="flex flex-wrap gap-[10px]">
             {postingTags.map(tag => {
@@ -399,7 +399,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
               return (
                 <span
                   key={tag}
-                  className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold ${
+                  className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold select-none ${
                     isSelected
                       ? "bg-blue-500 text-white"
                       : "border-1 border-gray-300 text-gray-400"
@@ -419,7 +419,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
             {tagList.map((tag, index) => (
               <span
                 key={index}
-                className="inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full border-1 border-blue-500 px-[15px] font-semibold text-blue-500"
+                className="inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full border-1 border-blue-500 px-[15px] font-semibold text-blue-500 select-none"
                 onClick={() => handleRemoveTag(tag)}
               >
                 {tag}
