@@ -66,7 +66,7 @@ const CategoryPolicyContent = ({
   return (
     <section className="flex flex-col gap-[50px] max-w-[1200px] mx-auto max-[1200px]:px-10">
       {/* 정책 카드 목록 */}
-      {policies.length > 0 ? (
+      {policies && policies.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {policies.map((policy, index) => (
             <PolicyCard
@@ -74,6 +74,15 @@ const CategoryPolicyContent = ({
               policy={policy}
             />
           ))}
+        </div>
+      ) : policies === undefined ? (
+        <div className="w-full min-h-[500px] flex flex-col items-center justify-center py-8 px-10">
+          <DecryptedText
+            text="데이터를 불러오는 중..."
+            animateOn="both"
+            speed={100}
+            className="text-2xl text-gray-800"
+          />
         </div>
       ) : (
         <div className="w-full min-h-[500px] flex flex-col items-center justify-center py-8 px-10">

@@ -3,12 +3,12 @@ import {
   Policy,
   PolicyPart,
   PolicyListRequest,
-  getPolicyListByCategory,
+  getPolicyDetailListByCategory,
   getPolicyListByCategories,
 } from "@/apis/policy";
 
 interface UsePolicyListReturn {
-  policies: Policy[];
+  policies: Policy[] | undefined;
   loading: boolean;
   error: string | null;
   maxPage: number;
@@ -38,7 +38,7 @@ export const usePolicyList = ({
   policyBusan = "부산내",
   initialPage = 1,
 }: UsePolicyListProps): UsePolicyListReturn => {
-  const [policies, setPolicies] = useState<Policy[]>([]);
+  const [policies, setPolicies] = useState<Policy[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [maxPage, setMaxPage] = useState<number>(1);
@@ -55,7 +55,7 @@ export const usePolicyList = ({
           page,
         };
 
-        const result = await getPolicyListByCategory(category, params);
+        const result = await getPolicyDetailListByCategory(category, params);
 
         setPolicies(result.policies);
         setMaxPage(result.maxPage);
@@ -71,7 +71,7 @@ export const usePolicyList = ({
         setLoading(false);
       }
     },
-    [category, policyBusan, currentPage]
+    [category, policyBusan]
   );
 
   const goToNextPage = useCallback(() => {
@@ -97,13 +97,67 @@ export const usePolicyList = ({
 
   // 초기 로딩
   useEffect(() => {
-    fetchPolicies(initialPage);
+    const loadInitialData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const params: PolicyListRequest = {
+          policyBusan,
+          page: initialPage,
+        };
+
+        const result = await getPolicyDetailListByCategory(category, params);
+
+        setPolicies(result.policies);
+        setMaxPage(result.maxPage);
+        setCurrentPage(initialPage);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "정책 목록을 가져오는데 실패했습니다."
+        );
+        console.error("정책 목록 조회 오류:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadInitialData();
   }, [category, policyBusan, initialPage]);
 
   // 카테고리나 지역이 변경될 때 페이지 초기화
   useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const params: PolicyListRequest = {
+          policyBusan,
+          page: 1,
+        };
+
+        const result = await getPolicyDetailListByCategory(category, params);
+
+        setPolicies(result.policies);
+        setMaxPage(result.maxPage);
+        setCurrentPage(1);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "정책 목록을 가져오는데 실패했습니다."
+        );
+        console.error("정책 목록 조회 오류:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     setCurrentPage(1);
-    fetchPolicies(1);
+    loadData();
   }, [category, policyBusan]);
 
   return {

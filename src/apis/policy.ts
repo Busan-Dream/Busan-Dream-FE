@@ -60,6 +60,23 @@ export const getPolicyListByCategory = async (
   };
 };
 
+// 카테고리별 정책 상세 목록 조회 (detail-list API 사용)
+export const getPolicyDetailListByCategory = async (
+  category: PolicyPart,
+  params: PolicyListRequest
+): Promise<{ policies: Policy[]; maxPage: number }> => {
+  const response = await axiosInstance.post("/busan/policy/detail-list", {
+    ...params,
+    category,
+  });
+
+  // API 응답 구조: { maxPage, value }
+  return {
+    policies: response.data.value || [],
+    maxPage: response.data.maxPage || 1,
+  };
+};
+
 // 다중 카테고리 정책 목록 조회
 export const getPolicyListByCategories = async (
   categories: PolicyPart[],
