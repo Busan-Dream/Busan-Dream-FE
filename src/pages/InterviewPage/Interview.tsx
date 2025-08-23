@@ -85,6 +85,34 @@ const Interview = () => {
     string | number | null
   >(null);
 
+  // 페이지 생성된 토스트들의 ID를 추적
+  const toastIdsRef = useRef<Set<string | number>>(new Set());
+
+  // 토스트 생성 헬퍼 함수 (ID 자동 추적)
+  const createTrackedToast = (message: string, options?: object) => {
+    const toastId = toast(message, options);
+    toastIdsRef.current.add(toastId);
+    return toastId;
+  };
+
+  const createTrackedErrorToast = (message: string, options?: object) => {
+    const toastId = toast.error(message, options);
+    toastIdsRef.current.add(toastId);
+    return toastId;
+  };
+
+  const createTrackedSuccessToast = (message: string, options?: object) => {
+    const toastId = toast.success(message, options);
+    toastIdsRef.current.add(toastId);
+    return toastId;
+  };
+
+  const createTrackedInfoToast = (message: string, options?: object) => {
+    const toastId = toast.info(message, options);
+    toastIdsRef.current.add(toastId);
+    return toastId;
+  };
+
   // 면접 시작 가능 여부 확인
   const canStartInterview = () => {
     // 필수 데이터 검증
@@ -164,10 +192,30 @@ const Interview = () => {
     return null; // 모든 조건이 충족됨
   };
 
+  // 컴포넌트 언마운트 시 모든 토스트 정리
+  useEffect(() => {
+    const toastIds = toastIdsRef.current;
+    return () => {
+      // 면접 질문 토스트 제거
+      if (questionToastId) {
+        toast.dismiss(questionToastId);
+      }
+
+      // 추적된 모든 토스트 제거
+      toastIds.forEach((toastId) => {
+        toast.dismiss(toastId);
+      });
+      toastIds.clear();
+
+      // 혹시 남아있을 수 있는 모든 토스트 제거
+      toast.dismiss();
+    };
+  }, [questionToastId]);
+
   // 필수 데이터 검증
   useEffect(() => {
     if (!postingOrgan || !postingPart) {
-      toast.error("면접 정보가 부족합니다.", {
+      createTrackedErrorToast("면접 정보가 부족합니다.", {
         description: "공고를 다시 선택해주세요.",
       });
       // 2초 후 메인 페이지로 이동
@@ -191,7 +239,7 @@ const Interview = () => {
         }
       } catch (error) {
         console.error("면접 질문 가져오기 실패:", error);
-        toast.error("면접 질문을 가져올 수 없습니다.", {
+        createTrackedErrorToast("면접 질문을 가져올 수 없습니다.", {
           description: "기본 질문으로 진행합니다.",
         });
       }
@@ -258,7 +306,7 @@ const Interview = () => {
     }
 
     setUploadedVideoBlob(file);
-    toast.success("영상이 업로드되었습니다!", {
+    createTrackedSuccessToast("영상이 업로드되었습니다!", {
       duration: 5000,
     });
   };
@@ -451,7 +499,7 @@ const Interview = () => {
       return;
     }
 
-    const toastId = toast("카메라와 마이크 권한을 확인해주세요!", {
+    const toastId = createTrackedToast("카메라와 마이크 권한을 확인해주세요!", {
       description:
         "화상 면접을 진행하기 위해 카메라와 마이크 권한이 필수입니다.",
       action: {
@@ -498,7 +546,7 @@ const Interview = () => {
     });
 
     // 브라우저 설정 안내 토스트도 함께 표시
-    toast("브라우저 설정 안내", {
+    createTrackedToast("브라우저 설정 안내", {
       description:
         "권한 요청이 실패하면 브라우저 주소창의 자물쇠 아이콘을 클릭하여 직접 설정할 수 있습니다.",
       action: {
@@ -527,7 +575,7 @@ const Interview = () => {
               "브라우저 설정 → 개인정보 보호 → 카메라/마이크 권한 허용";
           }
 
-          toast.info("권한 설정 방법", {
+          createTrackedInfoToast("권한 설정 방법", {
             description: message,
             duration: 15000,
           });
@@ -689,7 +737,9 @@ const Interview = () => {
                         startAnalysis(blob, interviewQuestion);
 
                         // 바로 리포트 페이지로 이동
-                        navigate("/report");
+                        navigate("/report", {
+                          state: { postingOrgan, postingPart },
+                        });
                       } catch {
                         toast.error("분석을 시작할 수 없습니다.");
                       }
@@ -698,7 +748,7 @@ const Interview = () => {
                     // 면접 시작 전 조건 확인
                     const cannotStartReason = getCannotStartReason();
                     if (cannotStartReason) {
-                      toast.error("면접을 시작할 수 없습니다.", {
+                      createTrackedErrorToast("면접을 시작할 수 없습니다.", {
                         description: cannotStartReason,
                         duration: 4000,
                       });
@@ -709,7 +759,7 @@ const Interview = () => {
                     await startRecording();
 
                     // 면접 질문 토스트 표시 (사용자가 지울 수 없음)
-                    const toastId = toast(interviewQuestion, {
+                    const toastId = createTrackedToast(interviewQuestion, {
                       duration: Infinity,
                       dismissible: false,
                       position: "top-center",
@@ -723,7 +773,7 @@ const Interview = () => {
                     });
                     setQuestionToastId(toastId);
 
-                    toast.info("면접이 시작되었습니다", {
+                    createTrackedInfoToast("면접이 시작되었습니다", {
                       description: "질문에 대한 답변을 시작해주세요.",
                       duration: 3000,
                     });
@@ -800,7 +850,9 @@ const Interview = () => {
                       startAnalysis(uploadedVideoBlob, interviewQuestion);
 
                       // 바로 리포트 페이지로 이동
-                      navigate("/report");
+                      navigate("/report", {
+                        state: { postingOrgan, postingPart },
+                      });
                     } catch (error) {
                       console.error("분석 시작 실패:", error);
                       toast.error("분석을 시작할 수 없습니다.");
@@ -865,7 +917,9 @@ const Interview = () => {
               startAnalysis(timeLimitBlob, interviewQuestion);
 
               // 바로 리포트 페이지로 이동
-              navigate("/report");
+              navigate("/report", {
+                state: { postingOrgan, postingPart },
+              });
             } catch (error) {
               console.error("분석 시작 실패:", error);
               toast.error("분석을 시작할 수 없습니다.", {

@@ -4,9 +4,16 @@ import { useAnalysis } from "@/contexts/AnalysisContext";
 interface AnalysisStatusProps {
   randomImage: string;
   isLoading: boolean;
+  postingOrgan?: string;
+  postingPart?: string;
 }
 
-const AnalysisStatus = ({ randomImage, isLoading }: AnalysisStatusProps) => {
+const AnalysisStatus = ({
+  randomImage,
+  isLoading,
+  postingOrgan,
+  postingPart,
+}: AnalysisStatusProps) => {
   const { analysisStatus, analysisResults } = useAnalysis();
 
   const getStatusMessage = () => {
@@ -43,11 +50,12 @@ const AnalysisStatus = ({ randomImage, isLoading }: AnalysisStatusProps) => {
       )}
       <div className="flex flex-col items-center gap-2 absolute bottom-0 left-0 right-0">
         <p className="text-gray-700 text-xl pt-1">{getStatusMessage()}</p>
-        <div className="flex justify-center gap-2 flex-wrap pt-1">
-          <Badge className="text-sm">한국철도공사</Badge>
-          <Badge className="text-sm">운영직</Badge>
-          <Badge className="text-sm">일반</Badge>
-        </div>
+        {(postingOrgan || postingPart) && (
+          <div className="flex justify-center gap-2 flex-wrap pt-1">
+            {postingOrgan && <Badge className="text-sm">{postingOrgan}</Badge>}
+            {postingPart && <Badge className="text-sm">{postingPart}</Badge>}
+          </div>
+        )}
       </div>
     </div>
   );
