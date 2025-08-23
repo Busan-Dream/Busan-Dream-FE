@@ -1,0 +1,65 @@
+import { Badge } from "@/components/ui/badge";
+import { Policy } from "@/apis/policy";
+
+interface PolicyCardProps {
+  policy: Policy;
+}
+
+const PolicyCard = ({ policy }: PolicyCardProps) => {
+  // 날짜 포맷팅 함수
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  // 상태 텍스트 생성
+  const getStatusText = () => {
+    if (policy.isCurrent) {
+      return `계속(${formatDate(policy.policyStartDate)} ~ 현재)`;
+    }
+    return `~ ${
+      policy.policyDateDate ? formatDate(policy.policyDateDate) : "상시"
+    }`;
+  };
+
+  return (
+    <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100 max-w-sm">
+      {/* 맨 위 - 부산 내/외 배지 */}
+      <div className="mb-4">
+        <Badge
+          variant="secondary"
+          className="bg-black text-white hover:bg-black/90"
+        >
+          {policy.policyBusan}
+        </Badge>
+      </div>
+
+      {/* 메인 제목 */}
+      <h3 className="text-lg font-bold text-black mb-2 leading-tight">
+        {policy.policyTitle}
+      </h3>
+
+      {/* 날짜/상태 */}
+      <p className="text-sm text-gray-500 mb-6">{getStatusText()}</p>
+
+      {/* 맨 아래 - 태그들 */}
+      <div className="flex flex-wrap gap-2">
+        {policy.policyTag.map((tag, index) => (
+          <Badge
+            key={index}
+            variant="outline"
+            className="bg-gray-100 text-black border-gray-200 hover:bg-gray-200"
+          >
+            {tag}
+          </Badge>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default PolicyCard;
