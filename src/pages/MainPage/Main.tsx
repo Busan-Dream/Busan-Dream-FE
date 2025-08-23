@@ -1,4 +1,3 @@
-import Footer from "@/components/Footer";
 import Banner from "./components/Banner";
 import Filter from "./components/Filter";
 import JobPosting from "./components/JobPosting";
@@ -30,7 +29,6 @@ const Main = () => {
           <JobPosting />
         </section>
       </main>
-      <Footer />
     </div>
   );
 };
