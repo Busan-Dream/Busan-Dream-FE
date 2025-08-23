@@ -1,7 +1,8 @@
-import Carousel from "@/components/ReactBits/Carousel";
-import Banner from "./components/Banner";
-import JobPosting from "./components/JobPosting";
 import Footer from "@/components/Footer";
+import Banner from "./components/Banner";
+import Filter from "./components/Filter";
+import JobPosting from "./components/JobPosting";
+import Carousel from "@/components/ReactBits/Carousel";
 
 const Main = () => {
   return (

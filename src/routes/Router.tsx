@@ -8,6 +8,7 @@ import Report from "@/pages/ReportPage/Report";
 import Main from "@/pages/MainPage/Main";
 import JobPostingDetails from "@/pages/JobPostingDetails/JobPostingDetails";
 import Policy from "@/pages/Policy/Policy";
+import CategoryPolicy from "@/pages/Policy/CategoryPolicy";
 
 const Router = () => {
   return (
@@ -20,6 +21,9 @@ const Router = () => {
       </Route>
 
       <Route path="/policy" element={<Policy />} />
+      <Route path="/policy/busan" element={<Policy />} />
+      <Route path="/policy/others" element={<Policy />} />
+      <Route path="/policy/:location/:category" element={<CategoryPolicy />} />
       <Route path="*" element={<Error />} />
     </Routes>
   );
