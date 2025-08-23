@@ -36,8 +36,8 @@ const JobPagination = ({ page, maxPage, onPageChange }: JobPaginationProps) => {
               <PaginationLink
                 href="#"
                 className="text-gray-700 hover:bg-gray-200"
-                onClick={e => {
-                  e.preventDefault();
+                onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
+                  event.preventDefault();
                   onPageChange(Math.max(1, start - groupSize));
                 }}
                 aria-label="이전 10페이지"
@@ -52,8 +52,8 @@ const JobPagination = ({ page, maxPage, onPageChange }: JobPaginationProps) => {
               href="#"
               aria-disabled={!canPrev}
               className={`${canPrev ? "text-gray-700 hover:bg-gray-200" : "text-gray-400 hover:bg-white hover:text-gray-400"}`}
-              onClick={e => {
-                e.preventDefault();
+              onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
+                event.preventDefault();
                 if (canPrev) onPageChange(page - 1);
               }}
             >
@@ -67,8 +67,8 @@ const JobPagination = ({ page, maxPage, onPageChange }: JobPaginationProps) => {
                 href="#"
                 isActive={p === page}
                 className={`font-medium text-gray-500 ${p === page ? "border-0 bg-blue-500 text-white hover:bg-blue-600 hover:text-white" : "bg-white hover:bg-gray-200 hover:text-gray-500"}`}
-                onClick={e => {
-                  e.preventDefault();
+                onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
+                  event.preventDefault();
                   onPageChange(p);
                 }}
               >
@@ -82,8 +82,8 @@ const JobPagination = ({ page, maxPage, onPageChange }: JobPaginationProps) => {
               href="#"
               aria-disabled={!canNext}
               className={`${canNext ? "text-gray-700 hover:bg-gray-200" : "text-gray-400 hover:bg-white hover:text-gray-400"}`}
-              onClick={e => {
-                e.preventDefault();
+              onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
+                event.preventDefault();
                 if (canNext) onPageChange(page + 1);
               }}
             >
@@ -96,8 +96,8 @@ const JobPagination = ({ page, maxPage, onPageChange }: JobPaginationProps) => {
               <PaginationLink
                 href="#"
                 className="text-gray-700 hover:bg-gray-200"
-                onClick={e => {
-                  e.preventDefault();
+                onClick={(event: React.MouseEvent<HTMLAnchorElement>) => {
+                  event.preventDefault();
                   onPageChange(end + 1);
                 }}
                 aria-label="다음 10페이지"
