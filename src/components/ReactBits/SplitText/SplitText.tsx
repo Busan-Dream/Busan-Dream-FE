@@ -41,6 +41,7 @@ const SplitText: React.FC<SplitTextProps> = ({
   // 폰트 로딩 확인
   useEffect(() => {
     if (typeof window === "undefined") return;
+
     const checkFonts = async () => {
       try {
         await document.fonts.ready;
@@ -50,6 +51,7 @@ const SplitText: React.FC<SplitTextProps> = ({
         setFontsLoaded(true);
       }
     };
+
     checkFonts();
   }, []);
 
