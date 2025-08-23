@@ -1,5 +1,6 @@
 import SectionTitle from "@/components/SectionTitle";
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useAnalysis } from "@/contexts/AnalysisContext";
 import { useVideoUpload } from "@/hooks/useVideoUpload";
 import { toast } from "sonner";
@@ -29,6 +30,8 @@ import womanWhiteHairTada1 from "@/assets/images/Report/finish/woman-white-hair-
 import Loading from "@/components/Loading";
 
 const Report = () => {
+  const location = useLocation();
+  const { postingOrgan, postingPart } = location.state || {};
   const { analysisStatus, analysisResults, individualStatus } = useAnalysis();
   const { downloadVideo, restoreVideoFromSession, savedVideoUrl } =
     useVideoUpload();
@@ -171,7 +174,12 @@ const Report = () => {
       </div>
 
       <article className="w-full max-sm:px-4 max-sm:landscape:px-2 bg-[#F4F6FA] border border-gray-200 rounded-4xl">
-        <AnalysisStatus randomImage={randomImage} isLoading={isLoading} />
+        <AnalysisStatus
+          randomImage={randomImage}
+          isLoading={isLoading}
+          postingOrgan={postingOrgan}
+          postingPart={postingPart}
+        />
 
         {isLoading ? (
           <Loading />

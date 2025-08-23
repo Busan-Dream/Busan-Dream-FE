@@ -30,8 +30,7 @@ import {
 const Interview = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { postingOrgan = "부산교통공사", postingPart = "운영직" } =
-    location.state || {};
+  const { postingOrgan, postingPart } = location.state || {};
   const { startAnalysis } = useAnalysis();
   const { permissions, requestPermissions, setPermissionsDirectly } =
     useMediaPermissions();
@@ -86,6 +85,146 @@ const Interview = () => {
     string | number | null
   >(null);
 
+  // 페이지 생성된 토스트들의 ID를 추적
+  const toastIdsRef = useRef<Set<string | number>>(new Set());
+
+  // 토스트 생성 헬퍼 함수 (ID 자동 추적)
+  const createTrackedToast = (message: string, options?: object) => {
+    const toastId = toast(message, options);
+    toastIdsRef.current.add(toastId);
+    return toastId;
+  };
+
+  const createTrackedErrorToast = (message: string, options?: object) => {
+    const toastId = toast.error(message, options);
+    toastIdsRef.current.add(toastId);
+    return toastId;
+  };
+
+  const createTrackedSuccessToast = (message: string, options?: object) => {
+    const toastId = toast.success(message, options);
+    toastIdsRef.current.add(toastId);
+    return toastId;
+  };
+
+  const createTrackedInfoToast = (message: string, options?: object) => {
+    const toastId = toast.info(message, options);
+    toastIdsRef.current.add(toastId);
+    return toastId;
+  };
+
+  // 면접 시작 가능 여부 확인
+  const canStartInterview = () => {
+    // 필수 데이터 검증
+    if (!postingOrgan || !postingPart) return false;
+
+    // 권한 검증
+    if (!isCameraGranted || !isMicrophoneGranted) return false;
+
+    // 스트림 상태 검증
+    if (!currentStream || !isEnvironmentReady) return false;
+
+    // 스트림에 비디오와 오디오 트랙이 모두 있는지 확인
+    const videoTracks = currentStream.getVideoTracks();
+    const audioTracks = currentStream.getAudioTracks();
+
+    if (videoTracks.length === 0 || audioTracks.length === 0) return false;
+
+    // 트랙이 활성 상태인지 확인
+    const hasActiveVideo = videoTracks.some(
+      (track) => track.readyState === "live"
+    );
+    const hasActiveAudio = audioTracks.some(
+      (track) => track.readyState === "live"
+    );
+
+    return hasActiveVideo && hasActiveAudio;
+  };
+
+  // 면접 시작 불가능 이유 반환
+  const getCannotStartReason = () => {
+    if (!postingOrgan || !postingPart) {
+      return "공고 정보가 부족합니다.";
+    }
+
+    if (!isCameraGranted) {
+      return "카메라 권한이 필요합니다.";
+    }
+
+    if (!isMicrophoneGranted) {
+      return "마이크 권한이 필요합니다.";
+    }
+
+    if (!currentStream) {
+      return "미디어 스트림이 활성화되지 않았습니다.";
+    }
+
+    if (!isEnvironmentReady) {
+      return "환경 설정이 완료되지 않았습니다.";
+    }
+
+    const videoTracks = currentStream.getVideoTracks();
+    const audioTracks = currentStream.getAudioTracks();
+
+    if (videoTracks.length === 0) {
+      return "비디오 트랙을 찾을 수 없습니다.";
+    }
+
+    if (audioTracks.length === 0) {
+      return "오디오 트랙을 찾을 수 없습니다.";
+    }
+
+    const hasActiveVideo = videoTracks.some(
+      (track) => track.readyState === "live"
+    );
+    const hasActiveAudio = audioTracks.some(
+      (track) => track.readyState === "live"
+    );
+
+    if (!hasActiveVideo) {
+      return "비디오가 활성화되지 않았습니다.";
+    }
+
+    if (!hasActiveAudio) {
+      return "오디오가 활성화되지 않았습니다.";
+    }
+
+    return null; // 모든 조건이 충족됨
+  };
+
+  // 컴포넌트 언마운트 시 모든 토스트 정리
+  useEffect(() => {
+    const toastIds = toastIdsRef.current;
+    return () => {
+      // 면접 질문 토스트 제거
+      if (questionToastId) {
+        toast.dismiss(questionToastId);
+      }
+
+      // 추적된 모든 토스트 제거
+      toastIds.forEach((toastId) => {
+        toast.dismiss(toastId);
+      });
+      toastIds.clear();
+
+      // 혹시 남아있을 수 있는 모든 토스트 제거
+      toast.dismiss();
+    };
+  }, [questionToastId]);
+
+  // 필수 데이터 검증
+  useEffect(() => {
+    if (!postingOrgan || !postingPart) {
+      createTrackedErrorToast("면접 정보가 부족합니다.", {
+        description: "공고를 다시 선택해주세요.",
+      });
+      // 2초 후 메인 페이지로 이동
+      setTimeout(() => {
+        navigate("/", { replace: true });
+      }, 2000);
+    }
+  }, [postingOrgan, postingPart, navigate]);
+
   // 면접 질문 가져오기
   useEffect(() => {
     const fetchInterviewQuestion = async () => {
@@ -100,7 +239,7 @@ const Interview = () => {
         }
       } catch (error) {
         console.error("면접 질문 가져오기 실패:", error);
-        toast.error("면접 질문을 가져올 수 없습니다.", {
+        createTrackedErrorToast("면접 질문을 가져올 수 없습니다.", {
           description: "기본 질문으로 진행합니다.",
         });
       }
@@ -167,7 +306,7 @@ const Interview = () => {
     }
 
     setUploadedVideoBlob(file);
-    toast.success("영상이 업로드되었습니다!", {
+    createTrackedSuccessToast("영상이 업로드되었습니다!", {
       duration: 5000,
     });
   };
@@ -360,7 +499,7 @@ const Interview = () => {
       return;
     }
 
-    const toastId = toast("카메라와 마이크 권한을 확인해주세요!", {
+    const toastId = createTrackedToast("카메라와 마이크 권한을 확인해주세요!", {
       description:
         "화상 면접을 진행하기 위해 카메라와 마이크 권한이 필수입니다.",
       action: {
@@ -407,7 +546,7 @@ const Interview = () => {
     });
 
     // 브라우저 설정 안내 토스트도 함께 표시
-    toast("브라우저 설정 안내", {
+    createTrackedToast("브라우저 설정 안내", {
       description:
         "권한 요청이 실패하면 브라우저 주소창의 자물쇠 아이콘을 클릭하여 직접 설정할 수 있습니다.",
       action: {
@@ -436,7 +575,7 @@ const Interview = () => {
               "브라우저 설정 → 개인정보 보호 → 카메라/마이크 권한 허용";
           }
 
-          toast.info("권한 설정 방법", {
+          createTrackedInfoToast("권한 설정 방법", {
             description: message,
             duration: 15000,
           });
@@ -480,6 +619,22 @@ const Interview = () => {
     isSafari,
   ]);
 
+  // 필수 데이터가 없으면 로딩 상태 표시
+  if (!postingOrgan || !postingPart) {
+    return (
+      <section className="min-h-screen py-6 max-sm:py-4 max-sm:landscape:py-2">
+        <div className="max-w-7xl px-6 max-sm:px-4 max-sm:landscape:px-2">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">면접 정보를 확인하는 중...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="min-h-screen py-6 max-sm:py-4 max-sm:landscape:py-2">
       <div className="max-w-7xl px-6 max-sm:px-4 max-sm:landscape:px-2">
@@ -487,22 +642,18 @@ const Interview = () => {
         <SectionTitle
           title="AI 화상면접"
           className="py-8"
-          description="공고명에 대한 모의 면접을 진행합니다."
+          description={`${postingOrgan} - ${postingPart} 공고에 대한 모의 면접을 진행합니다.`}
           subDescription="화상 면접은 하루 최대 3회 진행이 가능하며, 면접 질문은 '시작하기' 버튼을 누르면 랜덤으로 생성돼요."
         />
 
         {/* 메인 콘텐츠 영역 */}
         <figure className="flex flex-col w-full gap-6 max-lg:flex-col max-lg:gap-4 max-sm:landscape:gap-2">
-          {/* 공고 정보 안내 */}
-          {(!postingOrgan || !postingPart) && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <p className="text-yellow-800 text-sm">
-                <strong>안내:</strong> 공고 정보가 없어 기본 질문으로
-                진행됩니다. 정확한 면접을 위해 채용 상세 페이지에서 AI 면접을
-                시작해주세요.
-              </p>
-            </div>
-          )}
+          {/* 공고 정보 표시 */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p className="text-blue-800 text-sm">
+              <strong>면접 공고:</strong> {postingOrgan} - {postingPart}
+            </p>
+          </div>
 
           {/* 비디오 영역 */}
           <VideoPreview
@@ -586,17 +737,29 @@ const Interview = () => {
                         startAnalysis(blob, interviewQuestion);
 
                         // 바로 리포트 페이지로 이동
-                        navigate("/report");
+                        navigate("/report", {
+                          state: { postingOrgan, postingPart },
+                        });
                       } catch {
                         toast.error("분석을 시작할 수 없습니다.");
                       }
                     }
                   } else {
+                    // 면접 시작 전 조건 확인
+                    const cannotStartReason = getCannotStartReason();
+                    if (cannotStartReason) {
+                      createTrackedErrorToast("면접을 시작할 수 없습니다.", {
+                        description: cannotStartReason,
+                        duration: 4000,
+                      });
+                      return;
+                    }
+
                     // 면접 시작
                     await startRecording();
 
                     // 면접 질문 토스트 표시 (사용자가 지울 수 없음)
-                    const toastId = toast(interviewQuestion, {
+                    const toastId = createTrackedToast(interviewQuestion, {
                       duration: Infinity,
                       dismissible: false,
                       position: "top-center",
@@ -610,13 +773,13 @@ const Interview = () => {
                     });
                     setQuestionToastId(toastId);
 
-                    toast.info("면접이 시작되었습니다", {
+                    createTrackedInfoToast("면접이 시작되었습니다", {
                       description: "질문에 대한 답변을 시작해주세요.",
                       duration: 3000,
                     });
                   }
                 }}
-                disabled={!isEnvironmentReady}
+                disabled={!canStartInterview()}
                 className={`px-3 py-2 w-fit rounded-md text-white text-sm flex items-center gap-2 ${
                   isRecording
                     ? "bg-red-600 hover:bg-red-700"
@@ -636,6 +799,15 @@ const Interview = () => {
                   </>
                 )}
               </button>
+
+              {/* 면접 시작 상태 표시 */}
+              {!isRecording && !canStartInterview() && (
+                <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded-md">
+                  <p className="text-yellow-800 text-xs">
+                    <strong>대기 중:</strong> {getCannotStartReason()}
+                  </p>
+                </div>
+              )}
 
               {/* 영상 업로드 버튼 */}
               <div className="relative">
@@ -678,7 +850,9 @@ const Interview = () => {
                       startAnalysis(uploadedVideoBlob, interviewQuestion);
 
                       // 바로 리포트 페이지로 이동
-                      navigate("/report");
+                      navigate("/report", {
+                        state: { postingOrgan, postingPart },
+                      });
                     } catch (error) {
                       console.error("분석 시작 실패:", error);
                       toast.error("분석을 시작할 수 없습니다.");
@@ -743,7 +917,9 @@ const Interview = () => {
               startAnalysis(timeLimitBlob, interviewQuestion);
 
               // 바로 리포트 페이지로 이동
-              navigate("/report");
+              navigate("/report", {
+                state: { postingOrgan, postingPart },
+              });
             } catch (error) {
               console.error("분석 시작 실패:", error);
               toast.error("분석을 시작할 수 없습니다.", {
@@ -768,12 +944,10 @@ const Interview = () => {
                   면접 질문
                 </h3>
                 <p className="text-gray-700 text-base">{interviewQuestion}</p>
-                {postingOrgan && postingPart && (
-                  <div className="mt-2 text-sm text-gray-500">
-                    <span className="font-medium">공고:</span> {postingOrgan} -{" "}
-                    {postingPart}
-                  </div>
-                )}
+                <div className="mt-2 text-sm text-gray-500">
+                  <span className="font-medium">공고:</span> {postingOrgan} -{" "}
+                  {postingPart}
+                </div>
               </div>
               <div className="ml-4 text-sm text-gray-500">면접 진행 중...</div>
             </div>
