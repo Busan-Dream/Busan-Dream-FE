@@ -16,11 +16,11 @@ export type PolicyTag =
 export interface Policy {
   policyTitle: string;
   policyBusan: string;
-  policyTag: PolicyTag[];
+  policyTage: PolicyTag[]; // API 응답에 맞춰 수정
   policyPart: PolicyPart;
   policyUrl: string;
   policyStartDate: string;
-  policyDateDate: string | null;
+  policyEndDate: string | null; // API 응답에 맞춰 수정
   isCurrent: boolean;
 }
 
@@ -35,7 +35,7 @@ export interface PolicyListResponse {
 
 // 정책 목록 요청 타입
 export interface PolicyListRequest {
-  policyBusan: "부산내" | "부산외" | "공통";
+  policyBusan: "부산 내" | "부산 외" | "공통";
   page: number;
 }
 
@@ -56,6 +56,43 @@ export const getPolicyListByCategory = async (
   const policies = response[category] || [];
   return {
     policies,
+    maxPage: response.maxPage,
+  };
+};
+
+// 카테고리별 정책 상세 목록 조회 (detail-list API 사용)
+export const getPolicyDetailListByCategory = async (
+  category: PolicyPart,
+  params: PolicyListRequest
+): Promise<{ policies: Policy[]; maxPage: number }> => {
+  const response = await axiosInstance.post("/busan/policy/detail-list", {
+    ...params,
+    category,
+  });
+
+  // API 응답 구조: { maxPage, value }
+  return {
+    policies: response.data.value || [],
+    maxPage: response.data.maxPage || 1,
+  };
+};
+
+// 다중 카테고리 정책 목록 조회
+export const getPolicyListByCategories = async (
+  categories: PolicyPart[],
+  params: PolicyListRequest
+): Promise<{ policies: Policy[]; maxPage: number }> => {
+  const response = await getPolicyList(params);
+
+  // 선택된 카테고리들의 정책을 모두 합치기
+  const allPolicies: Policy[] = [];
+  categories.forEach((category) => {
+    const categoryPolicies = response[category] || [];
+    allPolicies.push(...categoryPolicies);
+  });
+
+  return {
+    policies: allPolicies,
     maxPage: response.maxPage,
   };
 };
