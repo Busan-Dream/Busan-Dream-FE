@@ -35,7 +35,7 @@ export interface PolicyListResponse {
 
 // 정책 목록 요청 타입
 export interface PolicyListRequest {
-  policyBusan: "부산내" | "부산외" | "공통";
+  policyBusan: "부산 내" | "부산 외" | "공통";
   page: number;
 }
 

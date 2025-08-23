@@ -6,7 +6,7 @@ import DecryptedText from "@/components/ReactBits/DecryptedText/DecryptedText";
 import { getPolicyList, Policy } from "@/apis/policy";
 
 interface PolicyContentProps {
-  policyBusan?: "부산내" | "부산외" | "공통";
+  policyBusan?: "부산 내" | "부산 외" | "공통";
 }
 
 interface CategoryPolicies {
@@ -16,7 +16,7 @@ interface CategoryPolicies {
   life: Policy[];
 }
 
-const PolicyContent = ({ policyBusan = "부산내" }: PolicyContentProps) => {
+const PolicyContent = ({ policyBusan = "부산 내" }: PolicyContentProps) => {
   const navigate = useNavigate();
   const [policies, setPolicies] = useState<CategoryPolicies>({
     work: [],
@@ -69,7 +69,7 @@ const PolicyContent = ({ policyBusan = "부산내" }: PolicyContentProps) => {
 
   const handleMoreClick = (categoryPath: string) => {
     const basePath =
-      policyBusan === "부산내" ? "/policy/busan" : "/policy/others";
+      policyBusan === "부산 내" ? "/policy/busan" : "/policy/others";
     navigate(`${basePath}/${categoryPath}`);
   };
 

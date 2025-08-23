@@ -6,12 +6,12 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface CategoryPolicyContentProps {
   category: "work" | "house" | "busan" | "life";
-  policyBusan?: "부산내" | "부산외" | "공통";
+  policyBusan?: "부산 내" | "부산 외" | "공통";
 }
 
 const CategoryPolicyContent = ({
   category,
-  policyBusan = "부산내",
+  policyBusan = "부산 내",
 }: CategoryPolicyContentProps) => {
   const {
     policies,

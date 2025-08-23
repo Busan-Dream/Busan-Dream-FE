@@ -23,19 +23,19 @@ interface UsePolicyListReturn {
 
 interface UsePolicyListProps {
   category: PolicyPart;
-  policyBusan?: "부산내" | "부산외" | "공통";
+  policyBusan?: "부산 내" | "부산 외" | "공통";
   initialPage?: number;
 }
 
 interface UseMultiPolicyListProps {
   categories: PolicyPart[];
-  policyBusan?: "부산내" | "부산외" | "공통";
+  policyBusan?: "부산 내" | "부산 외" | "공통";
   initialPage?: number;
 }
 
 export const usePolicyList = ({
   category,
-  policyBusan = "부산내",
+  policyBusan = "부산 내",
   initialPage = 1,
 }: UsePolicyListProps): UsePolicyListReturn => {
   const [policies, setPolicies] = useState<Policy[] | undefined>(undefined);
@@ -177,7 +177,7 @@ export const usePolicyList = ({
 
 export const useMultiPolicyList = ({
   categories,
-  policyBusan = "부산내",
+  policyBusan = "부산 내",
   initialPage = 1,
 }: UseMultiPolicyListProps): UsePolicyListReturn => {
   const [policies, setPolicies] = useState<Policy[]>([]);

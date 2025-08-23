@@ -10,7 +10,7 @@ const CategoryPolicy = () => {
     category: "work" | "house" | "busan" | "life";
   }>();
 
-  const policyBusan = location === "busan" ? "부산내" : "부산외";
+  const policyBusan = location === "busan" ? "부산 내" : "부산 외";
   const isFromBusan = location === "busan";
 
   const categoryInfo = {

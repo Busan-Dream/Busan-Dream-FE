@@ -9,8 +9,10 @@ const Policy = () => {
   const pathname = location.pathname;
 
   // URL 경로에 따라 지역 결정
-  const policyBusan = pathname.includes("/policy/others") ? "부산외" : "부산내";
-  const isFromBusan = policyBusan === "부산내";
+  const policyBusan = pathname.includes("/policy/others")
+    ? "부산 외"
+    : "부산 내";
+  const isFromBusan = policyBusan === "부산 내";
 
   return (
     <section>
