@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import JobContentDetails from "./JobContentDetails";
 import GradientText from "@/components/ReactBits/GradientText/GradientText";
+import InterviewPractice from "@/pages/MainPage/components/InterviewPractice";
 
 interface JobContentProps {
   postingOrgan: string;
+  postingField: string;
+  postingPart: string;
   postingTitle: string;
   postingTag: string[];
   postingRecipt: string;
@@ -19,6 +22,8 @@ interface JobContentProps {
 
 const JobContent = ({
   postingOrgan,
+  postingField,
+  postingPart,
   postingTitle,
   postingTag,
   postingRecipt,
@@ -37,9 +42,9 @@ const JobContent = ({
   const handleClickAI = () => {
     navigate("/interview", {
       state: {
-        postingOrgan: "부산교통공사",
-        postingField: "일반",
-        postingPart: "운영직",
+        postingOrgan: postingOrgan,
+        postingField: postingField,
+        postingPart: postingPart,
       },
     });
   };
@@ -103,6 +108,7 @@ const JobContent = ({
           </ul>
         </div>
       </div>
+      <InterviewPractice postingPart={postingPart} />
       {/* 채용 공고 상세 내용 */}
       <div className="space-y-12 py-5">
         <JobContentDetails

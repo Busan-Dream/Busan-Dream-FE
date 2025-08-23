@@ -87,6 +87,8 @@ const JobPostingDetails = () => {
         <section>
           <JobContent
             postingOrgan={postingOrgan}
+            postingField={postingField}
+            postingPart={postingPart}
             postingTitle={postingTitle}
             postingTag={postingTag}
             postingRecipt={postingRecipt}
