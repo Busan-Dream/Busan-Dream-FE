@@ -36,7 +36,8 @@ const DEFAULT_ITEMS: CarouselItem[] = [
   },
   {
     title: "부산 외 청년을 위한 정책",
-    description: "현재 법적 주소지가 부산이 아닌 청년을 위한 정책을 소개해드려요!",
+    description:
+      "현재 법적 주소지가 부산이 아닌 청년을 위한 정책을 소개해드려요!",
     id: 2,
     icon: <ShortcutIcon className="h-[14px] w-[14px] text-white" />,
   },
