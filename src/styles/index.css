@@ -2,10 +2,10 @@
 @import "tw-animate-css";
 @import "./animation.css";
 
+/* 로컬 Paperlogy 폰트 */
 @font-face {
   font-family: "Paperlogy";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-1Thin.woff2")
-    format("woff2");
+  src: url("../assets/font/paperlogy/Paperlogy-1Thin.ttf") format("truetype");
   font-weight: 100;
   font-style: normal;
   font-display: swap;
@@ -13,8 +13,16 @@
 
 @font-face {
   font-family: "Paperlogy";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-2Light.woff2")
-    format("woff2");
+  src: url("../assets/font/paperlogy/Paperlogy-2ExtraLight.ttf")
+    format("truetype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Paperlogy";
+  src: url("../assets/font/paperlogy/Paperlogy-3Light.ttf") format("truetype");
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -22,8 +30,7 @@
 
 @font-face {
   font-family: "Paperlogy";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-3Regular.woff2")
-    format("woff2");
+  src: url("../assets/font/paperlogy/Paperlogy-4Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -31,8 +38,7 @@
 
 @font-face {
   font-family: "Paperlogy";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Medium.woff2")
-    format("woff2");
+  src: url("../assets/font/paperlogy/Paperlogy-5Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -40,8 +46,8 @@
 
 @font-face {
   font-family: "Paperlogy";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5SemiBold.woff2")
-    format("woff2");
+  src: url("../assets/font/paperlogy/Paperlogy-6SemiBold.ttf")
+    format("truetype");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -49,8 +55,7 @@
 
 @font-face {
   font-family: "Paperlogy";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6Bold.woff2")
-    format("woff2");
+  src: url("../assets/font/paperlogy/Paperlogy-7Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -58,8 +63,8 @@
 
 @font-face {
   font-family: "Paperlogy";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7ExtraBold.woff2")
-    format("woff2");
+  src: url("../assets/font/paperlogy/Paperlogy-8ExtraBold.ttf")
+    format("truetype");
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -67,15 +72,16 @@
 
 @font-face {
   font-family: "Paperlogy";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2")
-    format("woff2");
+  src: url("../assets/font/paperlogy/Paperlogy-9Black.ttf") format("truetype");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 
 .font-paperlogy {
-  font-family: "Paperlogy", sans-serif !important;
+  font-family: "Paperlogy", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif !important;
 }
 
 @custom-variant dark (&:is(.dark *));

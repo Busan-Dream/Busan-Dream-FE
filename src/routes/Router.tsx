@@ -9,6 +9,7 @@ import Main from "@/pages/MainPage/Main";
 import JobPostingDetails from "@/pages/JobPostingDetails/JobPostingDetails";
 import Policy from "@/pages/Policy/Policy";
 import CategoryPolicy from "@/pages/Policy/CategoryPolicy";
+import TempPage from "@/pages/TempPage";
 
 const Router = () => {
   return (
@@ -18,6 +19,7 @@ const Router = () => {
         <Route path="/jobs/:id" element={<JobPostingDetails />} />
         <Route path="/interview" element={<Interview />} />
         <Route path="/report" element={<Report />} />
+        <Route path="/temp" element={<TempPage />} />
       </Route>
 
       <Route path="/policy" element={<Policy />} />
