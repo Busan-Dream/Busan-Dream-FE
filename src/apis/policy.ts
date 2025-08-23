@@ -16,11 +16,11 @@ export type PolicyTag =
 export interface Policy {
   policyTitle: string;
   policyBusan: string;
-  policyTag: PolicyTag[];
+  policyTage: PolicyTag[]; // API 응답에 맞춰 수정
   policyPart: PolicyPart;
   policyUrl: string;
   policyStartDate: string;
-  policyDateDate: string | null;
+  policyEndDate: string | null; // API 응답에 맞춰 수정
   isCurrent: boolean;
 }
 

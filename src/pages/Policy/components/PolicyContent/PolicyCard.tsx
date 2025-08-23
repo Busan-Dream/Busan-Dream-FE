@@ -22,12 +22,21 @@ const PolicyCard = ({ policy }: PolicyCardProps) => {
       return `계속(${formatDate(policy.policyStartDate)} ~ 현재)`;
     }
     return `~ ${
-      policy.policyDateDate ? formatDate(policy.policyDateDate) : "상시"
+      policy.policyEndDate ? formatDate(policy.policyEndDate) : "상시"
     }`;
   };
 
+  const handleCardClick = () => {
+    if (policy.policyUrl) {
+      window.open(policy.policyUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
-    <div className="bg-white rounded-xl p-6 border border-gray-200 max-w-sm cursor-pointer flex flex-col justify-between gap-4">
+    <div
+      className="bg-white rounded-xl p-6 border border-gray-200 max-w-sm cursor-pointer flex flex-col justify-between gap-4 hover:bg-gray-50 transition-all duration-300"
+      onClick={handleCardClick}
+    >
       {/* 맨 위 - 부산 내/외 배지 */}
       <Badge
         variant="secondary"
@@ -48,16 +57,19 @@ const PolicyCard = ({ policy }: PolicyCardProps) => {
 
       {/* 맨 아래 - 태그들 */}
       <div className="flex flex-wrap gap-2">
-        {policy.policyTag && policy.policyTag.length > 0 ? (
-          policy.policyTag.map((tag, index) => (
-            <Badge
-              key={index}
-              variant="outline"
-              className="bg-gray-100 text-black border-gray-200 hover:bg-gray-200"
-            >
-              {tag}
-            </Badge>
-          ))
+        {policy.policyTage && policy.policyTage.length > 0 ? (
+          policy.policyTage.flatMap((tag) => {
+            // 쉼표로 구분된 태그를 분리
+            const splitTags = tag
+              .split(",")
+              .map((t) => t.trim())
+              .filter((t) => t.length > 0);
+            return splitTags.map((splitTag, index) => (
+              <Badge key={`${tag}-${index}`} variant="secondary">
+                {splitTag}
+              </Badge>
+            ));
+          })
         ) : (
           <span className="text-sm text-gray-400">태그 없음</span>
         )}
