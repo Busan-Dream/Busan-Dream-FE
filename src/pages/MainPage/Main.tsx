@@ -21,13 +21,7 @@ const Main = () => {
         </div>
       </section>
       <main className="flex flex-col gap-[50px] px-5 2xl:px-0">
-        <div>
-          <Filter />
-        </div>
-        {/* 채용 공고 */}
-        <section>
-          <JobPosting />
-        </section>
+        <JobPosting />
       </main>
     </div>
   );

@@ -1,8 +1,7 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText as GSAPSplitText } from "gsap/SplitText";
-
 gsap.registerPlugin(ScrollTrigger, GSAPSplitText);
 
 export interface SplitTextProps {
@@ -37,12 +36,28 @@ const SplitText: React.FC<SplitTextProps> = ({
   const ref = useRef<HTMLParagraphElement>(null);
   const animationCompletedRef = useRef(false);
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  // 폰트 로딩 확인
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const checkFonts = async () => {
+      try {
+        await document.fonts.ready;
+        setFontsLoaded(true);
+      } catch (error) {
+        console.warn("Font loading failed, proceeding anyway:", error);
+        setFontsLoaded(true);
+      }
+    };
+    checkFonts();
+  }, []);
 
   useEffect(() => {
-    if (typeof window === "undefined" || !ref.current || !text) return;
+    if (typeof window === "undefined" || !ref.current || !text || !fontsLoaded)
+      return;
 
     const el = ref.current;
-
     animationCompletedRef.current = false;
 
     const absoluteLines = splitType === "lines";
@@ -81,7 +96,7 @@ const SplitText: React.FC<SplitTextProps> = ({
       return;
     }
 
-    targets.forEach((t) => {
+    targets.forEach(t => {
       (t as HTMLElement).style.willChange = "transform, opacity";
     });
 
@@ -89,10 +104,12 @@ const SplitText: React.FC<SplitTextProps> = ({
     const marginMatch = /^(-?\d+(?:\.\d+)?)(px|em|rem|%)?$/.exec(rootMargin);
     const marginValue = marginMatch ? parseFloat(marginMatch[1]) : 0;
     const marginUnit = marginMatch ? marginMatch[2] || "px" : "px";
+
     const sign =
       marginValue < 0
         ? `-=${Math.abs(marginValue)}${marginUnit}`
         : `+=${marginValue}${marginUnit}`;
+
     const start = `top ${startPct}%${sign}`;
 
     const tl = gsap.timeline({
@@ -101,7 +118,7 @@ const SplitText: React.FC<SplitTextProps> = ({
         start,
         toggleActions: "play reverse restart reverse",
         once: false,
-        onToggle: (self) => {
+        onToggle: self => {
           scrollTriggerRef.current = self;
         },
       },
@@ -148,12 +165,13 @@ const SplitText: React.FC<SplitTextProps> = ({
     threshold,
     rootMargin,
     onLetterAnimationComplete,
+    fontsLoaded,
   ]);
 
   return (
     <p
       ref={ref}
-      className={`split-parent overflow-hidden inline-block whitespace-normal ${className}`}
+      className={`split-parent inline-block overflow-hidden whitespace-normal ${className}`}
       style={{
         textAlign,
         wordWrap: "break-word",

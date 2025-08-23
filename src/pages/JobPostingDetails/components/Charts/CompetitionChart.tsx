@@ -11,30 +11,62 @@ import {
   ChartContainer,
   ChartTooltip,
 } from "@/components/ui/chart";
+import { useMutation } from "@tanstack/react-query";
+import axiosInstance from "@/apis/api";
+import { useEffect, useState } from "react";
 
-const data = [
-  {
-    postingYear: "2022",
-    postingRate: 125.8,
-    postingSelectedNumber: 6,
-    postingApplyNumber: 755,
-    fill: "var(--color-2022)",
-  },
-  {
-    postingYear: "2023",
-    postingRate: 91.8,
-    postingSelectedNumber: 5,
-    postingApplyNumber: 459,
-    fill: "var(--color-2023)",
-  },
-  {
-    postingYear: "2024",
-    postingRate: 57.3,
-    postingSelectedNumber: 7,
-    postingApplyNumber: 401,
-    fill: "var(--color-2024)",
-  },
-];
+type RequestBody = {
+  postingOrgan: string;
+  postingField: string;
+  postingPart: string;
+  postingYear: string;
+};
+
+// 서버 응답 원본 타입
+interface ApiRow {
+  postingYear: string;
+  postingSelectedNumber: number | null;
+  postingApplyNumber: number | null;
+  postingPassScore: number | null;
+  postingRate: number | null; // "100.6:1" 또는 "null"
+}
+
+// 차트용 타입 - postingPassScore 제거
+type ChartRow = Omit<ApiRow, "postingPassScore"> & {
+  fill?: string;
+};
+
+interface CompetitionChartProps {
+  postingOrgan: string;
+  postingField: string;
+  postingPart: string;
+  postingYear: string;
+}
+
+// 샘플 데이터
+// const data = [
+//   {
+//     postingYear: "2022",
+//     postingRate: 125.8,
+//     postingSelectedNumber: 6,
+//     postingApplyNumber: 755,
+//     fill: "var(--color-2022)",
+//   },
+//   {
+//     postingYear: "2023",
+//     postingRate: 91.8,
+//     postingSelectedNumber: 5,
+//     postingApplyNumber: 459,
+//     fill: "var(--color-2023)",
+//   },
+//   {
+//     postingYear: "2024",
+//     postingRate: 57.3,
+//     postingSelectedNumber: 7,
+//     postingApplyNumber: 401,
+//     fill: "var(--color-2024)",
+//   },
+// ];
 
 const chartConfig = {
   "2022": {
@@ -51,7 +83,39 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const CompetitionChart = () => {
+const CompetitionChart = ({
+  postingOrgan,
+  postingYear,
+  postingField,
+  postingPart,
+}: CompetitionChartProps) => {
+  const [chartData, setChartData] = useState<ChartRow[]>([]);
+
+  const { mutate } = useMutation<ApiRow[], unknown, RequestBody>({
+    mutationFn: async body => {
+      const { data } = await axiosInstance.post<ApiRow[]>(
+        "/busan/posting/post-chart",
+        body
+      );
+      return data;
+    },
+    onSuccess: rows => {
+      const mapped: ChartRow[] = rows.map(({ postingRate, ...rest }) => ({
+        ...rest,
+        postingRate: postingRate === null ? 0 : Number(postingRate), // null이면 0
+        hasData: postingRate !== null, // 데이터 유무 flag 추가
+      }));
+      setChartData(mapped);
+    },
+    onError: () => {
+      console.error("경쟁률 차트 불러오기 실패");
+    },
+  });
+
+  useEffect(() => {
+    mutate({ postingOrgan, postingField, postingPart, postingYear });
+  }, [postingOrgan, postingField, postingPart, postingYear, mutate]);
+
   return (
     <div className="competition_chart space-y-5">
       <div>
@@ -62,7 +126,7 @@ const CompetitionChart = () => {
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={data}
+            data={chartData}
             layout="vertical"
             margin={{ right: 50, top: 0, left: 0, bottom: 0 }}
           >
@@ -85,21 +149,27 @@ const CompetitionChart = () => {
               content={({ active, payload, label }) => {
                 if (!active || !payload?.length) return null;
 
-                const row = payload[0].payload as {
-                  year: string;
-                  postingRate: number;
-                  postingSelectedNumber: number;
-                  postingApplyNumber: number;
-                };
+                const row = payload[0].payload;
 
                 return (
                   <div className="space-y-1 rounded-md border bg-white px-3 py-2 text-sm drop-shadow-md xl:text-base">
                     <p>{`${label}년`}</p>
-                    <p className="text-blue-500">경쟁률 {row.postingRate}:1</p>
-                    <p className="text-gray-500">
-                      선발인원 {row.postingSelectedNumber} / 지원인원{" "}
-                      {row.postingApplyNumber}
-                    </p>
+                    {row.postingRate == null ? (
+                      <p className="text-gray-500">데이터 없음</p>
+                    ) : (
+                      <>
+                        <p className="text-blue-500">
+                          경쟁률{" "}
+                          {row.postingRate === 0
+                            ? "데이터 없음"
+                            : `${row.postingRate}:1`}
+                        </p>
+                        <p className="text-gray-500">
+                          선발인원 {row.postingSelectedNumber ?? "-"} / 지원인원{" "}
+                          {row.postingApplyNumber ?? "-"}
+                        </p>
+                      </>
+                    )}
                   </div>
                 );
               }}
@@ -114,19 +184,19 @@ const CompetitionChart = () => {
                 dataKey="postingRate"
                 position="insideRight"
                 offset={8}
-                content={props => {
-                  const { x, y, width, height, value } = props;
+                content={({ x, y, width, height, value }) => {
+                  if (x == null || y == null) return null;
 
                   return (
                     <text
-                      x={Number(width) + Number(x) - 20}
+                      x={Number(x) + Number(width) + 5}
                       y={Number(y) + Number(height) / 2}
-                      fill="#ffffff"
-                      fontSize={15}
+                      fill={value === 0 ? "#888" : "#fff"}
+                      fontSize={14}
                       textAnchor="end"
                       alignmentBaseline="middle"
                     >
-                      {value} : 1
+                      {value === 0 ? "데이터 없음" : `${value} : 1`}
                     </text>
                   );
                 }}
