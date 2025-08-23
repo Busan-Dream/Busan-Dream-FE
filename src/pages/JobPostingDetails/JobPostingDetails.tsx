@@ -36,6 +36,10 @@ const JobPostingDetails = () => {
   });
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     if (data?.postingOrgan) {
       const found = organizations.find(org => org.name === data.postingOrgan);
       if (found) {
