@@ -7,9 +7,12 @@ const Main = () => {
   return (
     <div className="main">
       {/* 배너 */}
-      <section role="banner" className="mt-[30px] mb-[50px] h-[250px]">
+      <section
+        role="banner"
+        className="mt-[30px] mb-[50px] h-[250px] flex gap-6"
+      >
         <Banner />
-        <div style={{ height: "600px", position: "relative" }}>
+        <div style={{ height: "100%", position: "relative" }}>
           <Carousel
             baseWidth={300}
             autoplay={true}

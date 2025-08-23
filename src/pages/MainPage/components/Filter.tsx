@@ -274,7 +274,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
               return (
                 <span
                   key={part}
-                  className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold ${
+                  className={`inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full px-[15px] font-semibold ${
                     isSelected
                       ? "bg-blue-500 text-white"
                       : "border-1 border-gray-300 text-gray-400"
@@ -300,7 +300,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
                 return (
                   <span
                     key={field}
-                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold ${
+                    className={`inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full px-[15px] font-semibold ${
                       isSelected
                         ? "bg-blue-500 text-white"
                         : "border-1 border-gray-300 text-gray-400"
@@ -323,7 +323,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
                 return (
                   <span
                     key={type}
-                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold ${
+                    className={`inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full px-[15px] font-semibold ${
                       isSelected
                         ? "bg-blue-500 text-white"
                         : "border-1 border-gray-300 text-gray-400"
@@ -350,7 +350,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
                 return (
                   <span
                     key={edu}
-                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold ${
+                    className={`inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full px-[15px] font-semibold ${
                       isSelected
                         ? "bg-blue-500 text-white"
                         : "border-1 border-gray-300 text-gray-400"
@@ -373,7 +373,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
                 return (
                   <span
                     key={stat}
-                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold ${
+                    className={`inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full px-[15px] font-semibold ${
                       isSelected
                         ? "bg-blue-500 text-white"
                         : "border-1 border-gray-300 text-gray-400"
@@ -399,7 +399,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
               return (
                 <span
                   key={tag}
-                  className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold ${
+                  className={`inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full px-[15px] font-semibold ${
                     isSelected
                       ? "bg-blue-500 text-white"
                       : "border-1 border-gray-300 text-gray-400"
@@ -419,7 +419,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
             {tagList.map((tag, index) => (
               <span
                 key={index}
-                className="inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full border-1 border-blue-500 px-[15px] font-semibold text-blue-500"
+                className="inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full border-1 border-blue-500 px-[15px] font-semibold text-blue-500"
                 onClick={() => handleRemoveTag(tag)}
               >
                 {tag}
