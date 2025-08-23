@@ -16,7 +16,11 @@ import {
 } from "@/apis/interview";
 import { Badge } from "@/components/ui/badge";
 
-const InterviewPractice = () => {
+interface InterviewPracticeProps {
+  postingPart: string;
+}
+
+const InterviewPractice = ({ postingPart }: InterviewPracticeProps) => {
   const [interviewType, setInterviewType] = useState<string>("토론면접");
   const [question, setQuestion] = useState<InterviewQuestionResponse | null>(
     null
@@ -27,7 +31,6 @@ const InterviewPractice = () => {
   );
   const [loading, setLoading] = useState<boolean>(false);
   const [aiLoading, setAiLoading] = useState<boolean>(false);
-  const [jobCategory, setJobCategory] = useState<string>("기계직");
 
   const interviewTypes = [
     { value: "토론면접", label: "토론면접" },
@@ -99,18 +102,18 @@ const InterviewPractice = () => {
   };
 
   return (
-    <div className="interview_practice space-y-8 mt-8">
+    <div className="interview_practice space-y-8 p-8">
       {/* 면접 타입 선택 및 직무 카테고리 */}
       <div className="flex flex-col gap-6">
         {/* 면접 타입 선택 */}
-        <h3 className="flex gap-2 items-center text-xl font-semibold">
-          <span>{jobCategory}</span>
+        <h3 className="flex items-center gap-2 text-xl font-semibold">
+          <span>{postingPart}</span>
           <Select value={interviewType} onValueChange={setInterviewType}>
             <SelectTrigger className="h-12">
               <SelectValue placeholder="면접 타입을 선택하세요" />
             </SelectTrigger>
             <SelectContent>
-              {interviewTypes.map((type) => (
+              {interviewTypes.map(type => (
                 <SelectItem key={type.value} value={type.value}>
                   {type.label}
                 </SelectItem>
@@ -124,7 +127,7 @@ const InterviewPractice = () => {
         <Button
           onClick={generateQuestion}
           disabled={!interviewType || loading}
-          className="w-full h-12 transition-bg bg-gradient-to-r from-[#E4007F]/60 to-[#4079ff]/60 hover:from-[#D4007F] hover:to-[#3079ff]"
+          className="h-12 w-full bg-gradient-to-r from-[#E4007F] to-[#4079ff] hover:from-[#D4007F] hover:to-[#3079ff]"
         >
           {loading ? "질문 생성 중..." : "면접 질문 생성"}
         </Button>
@@ -137,8 +140,8 @@ const InterviewPractice = () => {
           <div className="space-y-6">
             <div className="flex flex-col gap-2">
               <label className="text-lg font-medium text-gray-700">질문</label>
-              <div className="p-6 bg-gray-50 rounded-lg border-gray-500">
-                <p className="text-gray-800 text-lg leading-relaxed">
+              <div className="rounded-lg border-gray-500 bg-gray-50 p-6">
+                <p className="text-lg leading-relaxed text-gray-800">
                   {question.question}
                 </p>
               </div>
@@ -149,8 +152,8 @@ const InterviewPractice = () => {
               <label className="text-lg font-medium text-gray-700">
                 핵심 포인트
               </label>
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <p className="text-gray-700 leading-relaxed">
+              <div className="rounded-lg bg-gray-50 p-4">
+                <p className="leading-relaxed text-gray-700">
                   {question.evaluation_criteria}
                 </p>
               </div>
@@ -163,7 +166,7 @@ const InterviewPractice = () => {
               </label>
               <div className="flex flex-wrap gap-2">
                 {question.keywords.map((keyword, index) => (
-                  <Badge key={index} className="h-7 px-3 text-md">
+                  <Badge key={index} className="text-md h-7 px-3">
                     {keyword}
                   </Badge>
                 ))}
@@ -176,7 +179,7 @@ const InterviewPractice = () => {
       {/* 답변 비교 섹션 */}
       {question && (
         <div className="space-y-6">
-          <h2 className="text-2xl font-semibold mb-6">답변 작성 및 비교</h2>
+          <h2 className="mb-6 text-2xl font-semibold">답변 작성 및 비교</h2>
 
           <div className="grid grid-cols-2 gap-8">
             {/* 내 답변 */}
@@ -185,8 +188,8 @@ const InterviewPractice = () => {
               <Textarea
                 placeholder="여기에 답변을 작성하세요..."
                 value={userAnswer}
-                onChange={(e) => setUserAnswer(e.target.value)}
-                className="min-h-[300px] text-base leading-relaxed resize-none"
+                onChange={e => setUserAnswer(e.target.value)}
+                className="min-h-[300px] resize-none text-base leading-relaxed"
               />
             </div>
 
@@ -196,7 +199,7 @@ const InterviewPractice = () => {
                 AI 추천 답변
               </h3>
               {!aiAnswer ? (
-                <div className="min-h-[300px] flex items-center justify-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                <div className="flex min-h-[300px] items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
                   <div className="text-center text-gray-500">
                     <p className="mb-2">답변을 작성한 후</p>
                     <p>"AI 추천 답변 보기" 버튼을 클릭하세요</p>
@@ -204,8 +207,8 @@ const InterviewPractice = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                    <p className="text-gray-800 leading-relaxed">
+                  <div className="rounded-lg border border-green-200 bg-green-50 p-4">
+                    <p className="leading-relaxed text-gray-800">
                       {aiAnswer.answer}
                     </p>
                   </div>
@@ -222,7 +225,7 @@ const InterviewPractice = () => {
             onClick={generateAIAnswer}
             disabled={aiLoading}
             size="lg"
-            className="h-12 px-8 bg-gradient-to-r from-[#E4007F] to-[#4079ff] hover:from-[#D4007F] hover:to-[#3079ff]"
+            className="h-12 bg-gradient-to-r from-[#E4007F] to-[#4079ff] px-8 hover:from-[#D4007F] hover:to-[#3079ff]"
           >
             {aiLoading ? "AI 답변 생성 중..." : "AI 추천 답변 보기"}
           </Button>
@@ -239,7 +242,7 @@ const InterviewPractice = () => {
             </label>
             <div className="flex gap-2">
               {aiAnswer.key_points.map((point, index) => (
-                <div key={index} className="p-3 rounded-lg bg-gray-100">
+                <div key={index} className="rounded-lg bg-gray-100 p-3">
                   <p className="text-gray-700">{point}</p>
                 </div>
               ))}
@@ -251,7 +254,7 @@ const InterviewPractice = () => {
             <label className="text-lg font-medium text-gray-700">답변 팁</label>
             <div className="flex gap-2">
               {aiAnswer.answer_tips.map((tip, index) => (
-                <div key={index} className="p-3 rounded-lg bg-gray-100">
+                <div key={index} className="rounded-lg bg-gray-100 p-3">
                   <p className="text-gray-700"> {tip}</p>
                 </div>
               ))}
@@ -265,7 +268,7 @@ const InterviewPractice = () => {
             </label>
             <div className="flex gap-2">
               {aiAnswer.evaluation_focus.map((focus, index) => (
-                <div key={index} className="p-3 rounded-lg bg-gray-100">
+                <div key={index} className="rounded-lg bg-gray-100 p-3">
                   <p className="text-gray-700"> {focus}</p>
                 </div>
               ))}
