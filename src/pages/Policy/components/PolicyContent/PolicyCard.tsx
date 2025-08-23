@@ -34,13 +34,13 @@ const PolicyCard = ({ policy }: PolicyCardProps) => {
           variant="secondary"
           className="bg-black text-white hover:bg-black/90"
         >
-          {policy.policyBusan}
+          {policy.policyBusan || "지역 정보 없음"}
         </Badge>
       </div>
 
       {/* 메인 제목 */}
-      <h3 className="text-lg font-bold text-black mb-2 leading-tight">
-        {policy.policyTitle}
+      <h3 className="text-lg text-black mb-2 leading-tight">
+        {policy.policyTitle || "제목 없음"}
       </h3>
 
       {/* 날짜/상태 */}
@@ -48,15 +48,19 @@ const PolicyCard = ({ policy }: PolicyCardProps) => {
 
       {/* 맨 아래 - 태그들 */}
       <div className="flex flex-wrap gap-2">
-        {policy.policyTag.map((tag, index) => (
-          <Badge
-            key={index}
-            variant="outline"
-            className="bg-gray-100 text-black border-gray-200 hover:bg-gray-200"
-          >
-            {tag}
-          </Badge>
-        ))}
+        {policy.policyTag && policy.policyTag.length > 0 ? (
+          policy.policyTag.map((tag, index) => (
+            <Badge
+              key={index}
+              variant="outline"
+              className="bg-gray-100 text-black border-gray-200 hover:bg-gray-200"
+            >
+              {tag}
+            </Badge>
+          ))
+        ) : (
+          <span className="text-sm text-gray-400">태그 없음</span>
+        )}
       </div>
     </div>
   );
