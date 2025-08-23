@@ -2,7 +2,7 @@ import { useQueries } from "@tanstack/react-query";
 import JobPostingCard from "./JobPostingCard";
 import axiosInstance from "@/apis/api";
 import { useNavigate } from "react-router-dom";
-import JobPagination from "./Pagination";
+import JobPagination from "./JobPagination";
 
 interface JobPostingListProps {
   searchKeywords: SearchTag;
