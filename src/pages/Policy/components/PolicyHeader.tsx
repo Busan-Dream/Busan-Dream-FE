@@ -31,7 +31,7 @@ const PolicyHeader = ({ isFromBusan, category }: PolicyHeaderProps) => {
               }}
               className="font-bold"
             >
-              {isFromBusan ? "의" : "&nbsp;외"}
+              {isFromBusan ? "의" : "\u00A0외"}
             </p>
             &nbsp;청년 정책
             {category && (

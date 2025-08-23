@@ -38,12 +38,29 @@ const PolicyCard = ({ policy }: PolicyCardProps) => {
       onClick={handleCardClick}
     >
       {/* 맨 위 - 부산 내/외 배지 */}
-      <Badge
-        variant="secondary"
-        className="bg-black text-white hover:bg-black/90"
-      >
-        {policy.policyBusan || "지역 정보 없음"}
-      </Badge>
+      {policy.policyBusan === "공통" ? (
+        <div className="flex gap-2">
+          <Badge
+            variant="secondary"
+            className="bg-black text-white hover:bg-black/90"
+          >
+            부산내
+          </Badge>
+          <Badge
+            variant="secondary"
+            className="bg-black text-white hover:bg-black/90"
+          >
+            부산외
+          </Badge>
+        </div>
+      ) : (
+        <Badge
+          variant="secondary"
+          className="bg-black text-white hover:bg-black/90"
+        >
+          {policy.policyBusan || "지역 정보 없음"}
+        </Badge>
+      )}
 
       <div className="flex flex-col gap-1">
         {/* 메인 제목 */}
