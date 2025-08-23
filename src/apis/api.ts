@@ -4,7 +4,7 @@ const API_BASE_URL = "https://busan-dream.co.kr";
 
 export const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 30000,
+  timeout: 600000,
   headers: {
     "Content-Type": "application/json",
   },
