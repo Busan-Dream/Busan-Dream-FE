@@ -81,9 +81,6 @@ const Interview = () => {
   const [interviewQuestion, setInterviewQuestion] = useState(
     DEFAULT_INTERVIEW_QUESTION
   );
-  const [questionToastId, setQuestionToastId] = useState<
-    string | number | null
-  >(null);
 
   // 페이지 생성된 토스트들의 ID를 추적
   const toastIdsRef = useRef<Set<string | number>>(new Set());
@@ -196,11 +193,6 @@ const Interview = () => {
   useEffect(() => {
     const toastIds = toastIdsRef.current;
     return () => {
-      // 면접 질문 토스트 제거
-      if (questionToastId) {
-        toast.dismiss(questionToastId);
-      }
-
       // 추적된 모든 토스트 제거
       toastIds.forEach((toastId) => {
         toast.dismiss(toastId);
@@ -210,7 +202,7 @@ const Interview = () => {
       // 혹시 남아있을 수 있는 모든 토스트 제거
       toast.dismiss();
     };
-  }, [questionToastId]);
+  }, []);
 
   // 필수 데이터 검증
   useEffect(() => {
@@ -270,12 +262,6 @@ const Interview = () => {
       // 녹화 중지
       const blob = await stopRecording();
       setTimeLimitBlob(blob);
-
-      // 질문 토스트 제거
-      if (questionToastId) {
-        toast.dismiss(questionToastId);
-        setQuestionToastId(null);
-      }
 
       // 강제 중지 모달 표시
       setShowTimeLimitModal(true);
@@ -716,12 +702,6 @@ const Interview = () => {
                     // 면접 제출
                     const blob = await stopRecording();
 
-                    // 질문 토스트 제거
-                    if (questionToastId) {
-                      toast.dismiss(questionToastId);
-                      setQuestionToastId(null);
-                    }
-
                     if (blob) {
                       // 영상을 로컬에 저장 (사용자가 나중에 다운로드 가능)
                       saveVideoLocally(blob);
@@ -757,21 +737,6 @@ const Interview = () => {
 
                     // 면접 시작
                     await startRecording();
-
-                    // 면접 질문 토스트 표시 (사용자가 지울 수 없음)
-                    const toastId = createTrackedToast(interviewQuestion, {
-                      duration: Infinity,
-                      dismissible: false,
-                      position: "top-center",
-                      style: {
-                        backgroundColor: "#000000",
-                        color: "white",
-                        border: "none",
-                        fontSize: "16px",
-                        fontWeight: "500",
-                      },
-                    });
-                    setQuestionToastId(toastId);
 
                     createTrackedInfoToast("면접이 시작되었습니다", {
                       description: "질문에 대한 답변을 시작해주세요.",
@@ -936,7 +901,7 @@ const Interview = () => {
 
       {/* 면접 질문 표시 (면접 시작 시에만) */}
       {isRecording && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-lg border-b border-gray-200 animate-slideDown">
+        <div className="fixed top-[60px] left-0 right-0 z-50 bg-white shadow-lg border-b border-gray-200 animate-slideDown">
           <div className="max-w-4xl mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex-1">
