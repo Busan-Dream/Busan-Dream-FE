@@ -29,7 +29,7 @@ export const MemberInfo = ({ role, name, githubId }: MemberInfoProps) => {
 const Footer = () => {
   return (
     <footer className="w-full max-h-fit  bg-gray-900 text-gray-300 py-12 px-8">
-      <div className="h-[150px] sm:h-fit max-h-fit max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
+      <div className=" max-h-fit max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
         {/* 왼쪽 섹션 - 이벤트 정보 */}
         <div className="flex flex-col gap-4 h-full justify-between">
           <div className="flex flex-col relative">
