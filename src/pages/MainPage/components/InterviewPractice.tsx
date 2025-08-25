@@ -66,7 +66,7 @@ const InterviewPractice = ({ postingPart }: InterviewPracticeProps) => {
           | "상황면접"
           | "발표면접"
           | "경험면접",
-        job_category: "기계직",
+        job_category: postingPart,
       });
       setQuestion(questionData);
       setAiAnswer(null); // 새로운 질문이 생성되면 AI 답변 초기화
