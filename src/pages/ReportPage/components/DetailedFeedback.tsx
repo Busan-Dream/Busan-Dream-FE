@@ -33,23 +33,23 @@ const DetailedFeedback = () => {
   const chartData = [
     {
       category: "자신감",
-      value: processSentimentValue(sentimentData.confidence_level) || 85,
-      color: "#3B82F6", // blue-500
+      value: processSentimentValue(sentimentData.confidence_level) || 0,
+      color: "#3B82F6",
     },
     {
       category: "감정 안정성",
-      value: processSentimentValue(sentimentData.emotional_stability) || 70,
-      color: "#10B981", // emerald-500
+      value: processSentimentValue(sentimentData.emotional_stability) || 0,
+      color: "#10B981",
     },
     {
       category: "전체 감정 점수",
-      value: processSentimentValue(sentimentData.sentiment_score) || 75,
-      color: "#8B5CF6", // violet-500
+      value: processSentimentValue(sentimentData.sentiment_score) || 0,
+      color: "#8B5CF6",
     },
     {
       category: "스트레스 수준",
-      value: processSentimentValue(sentimentData.stress_level) || 60,
-      color: "#F59E0B", // amber-500
+      value: processSentimentValue(sentimentData.stress_level) || 0,
+      color: "#F59E0B",
     },
   ];
 
@@ -59,9 +59,9 @@ const DetailedFeedback = () => {
   );
 
   // 디버깅용 로그
-  console.log("DetailedFeedback - sentimentData:", sentimentData);
-  console.log("DetailedFeedback - chartData:", chartData);
-  console.log("DetailedFeedback - hasValidData:", hasValidData);
+  // console.log("DetailedFeedback - sentimentData:", sentimentData);
+  // console.log("DetailedFeedback - chartData:", chartData);
+  // console.log("DetailedFeedback - hasValidData:", hasValidData);
 
   return (
     <div className="p-8">
