@@ -19,8 +19,8 @@ export interface Policy {
   policyTage: PolicyTag[]; // API 응답에 맞춰 수정
   policyPart: PolicyPart;
   policyUrl: string;
-  policyStartDate: string;
-  policyEndDate: string | null; // API 응답에 맞춰 수정
+  policyStartDate: string | number;
+  policyEndDate: string | number | null; // API 응답에 맞춰 수정
   isCurrent: boolean;
 }
 

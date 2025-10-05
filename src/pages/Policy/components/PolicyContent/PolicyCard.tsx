@@ -7,23 +7,27 @@ interface PolicyCardProps {
 
 const PolicyCard = ({ policy }: PolicyCardProps) => {
   // 날짜 포맷팅 함수
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("ko-KR", {
+  const formatDate = (date: string | number) => {
+    if (typeof date === "string") {
+      return date;
+    }
+    const dateObj = new Date(date);
+    return dateObj.toLocaleDateString("ko-KR", {
       year: "numeric",
       month: "long",
       day: "numeric",
     });
   };
 
-  // 상태 텍스트 생성
   const getStatusText = () => {
     if (policy.isCurrent) {
-      return `계속(${formatDate(policy.policyStartDate)} ~ 현재)`;
+      const startDate = formatDate(policy.policyStartDate);
+      return `계속(${startDate} ~ 현재)`;
     }
-    return `~ ${
-      policy.policyEndDate ? formatDate(policy.policyEndDate) : "상시"
-    }`;
+    const endDate = policy.policyEndDate
+      ? formatDate(policy.policyEndDate)
+      : "상시";
+    return `~ ${endDate}`;
   };
 
   const handleCardClick = () => {
