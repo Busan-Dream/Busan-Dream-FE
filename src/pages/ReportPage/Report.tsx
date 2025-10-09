@@ -155,9 +155,21 @@ const Report = () => {
         {savedVideoUrl && (
           <div className="flex justify-end mt-4">
             <button
-              onClick={() => {
-                downloadVideo();
-                toast.info("영상 다운로드가 시작되었습니다!");
+              onClick={async () => {
+                try {
+                  const success = await downloadVideo();
+                  if (success) {
+                    toast.success("영상 다운로드가 완료되었습니다!");
+                  } else {
+                    toast.error("영상 다운로드에 실패했습니다.", {
+                      description: "영상 파일을 찾을 수 없습니다.",
+                    });
+                  }
+                } catch {
+                  toast.error("영상 다운로드 중 오류가 발생했습니다.", {
+                    description: "다시 시도해주세요.",
+                  });
+                }
               }}
               className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-lg text-sm flex items-center gap-2 transition-colors"
               title="녹화된 영상 다운로드"
