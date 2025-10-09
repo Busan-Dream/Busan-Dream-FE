@@ -61,11 +61,40 @@ export const useVideoUpload = (): UseVideoUploadReturn => {
       if (videoKeys.length > 0) {
         // 가장 최근 영상 찾기
         const latestKey = videoKeys.sort().pop()!;
-        const videoData = JSON.parse(sessionStorage.getItem(latestKey)!);
 
+        // Base64 데이터가 있으면 새로운 Blob URL 생성 (페이지 새로고침 후에도 작동)
+        const base64Data = sessionStorage.getItem(`${latestKey}-data`);
+        if (base64Data) {
+          const videoData = JSON.parse(sessionStorage.getItem(latestKey)!);
+          debugLog(
+            "Base64 데이터에서 영상 복원 시작, MIME 타입:",
+            videoData?.type
+          );
+          fetch(base64Data)
+            .then((res) => res.blob())
+            .then((blob) => {
+              // 원본 MIME 타입으로 새로운 Blob 생성
+              const typedBlob = videoData?.type
+                ? new Blob([blob], { type: videoData.type })
+                : blob;
+              const url = URL.createObjectURL(typedBlob);
+              setSavedVideoUrl(url);
+              debugLog("세션 스토리지에서 영상 복원 완료 (Base64):", url);
+            })
+            .catch((error) => {
+              debugLog("Base64에서 Blob 변환 실패:", error);
+            });
+          return base64Data;
+        }
+
+        // Base64 데이터가 없으면 기존 URL 사용 (새로고침 전에만 유효)
+        const videoData = JSON.parse(sessionStorage.getItem(latestKey)!);
         if (videoData && videoData.url) {
           setSavedVideoUrl(videoData.url);
-          debugLog("세션 스토리지에서 영상 복원 완료:", videoData.url);
+          debugLog(
+            "세션 스토리지에서 영상 URL 복원 (새로고침 전):",
+            videoData.url
+          );
           return videoData.url;
         }
       }
@@ -93,7 +122,7 @@ export const useVideoUpload = (): UseVideoUploadReturn => {
           link.click();
           document.body.removeChild(link);
           URL.revokeObjectURL(url);
-          debugLog("영상 다운로드 완료");
+          debugLog("영상 다운로드 완료 (.mp4), 실제 타입:", videoBlob.type);
           return true;
         } else {
           // savedVideoUrl에서 Blob 가져오기
@@ -112,7 +141,7 @@ export const useVideoUpload = (): UseVideoUploadReturn => {
           link.click();
           document.body.removeChild(link);
           URL.revokeObjectURL(url);
-          debugLog("영상 다운로드 완료");
+          debugLog("영상 다운로드 완료 (.mp4), 실제 타입:", blobData.type);
           return true;
         }
       } catch (error) {

@@ -19,19 +19,45 @@ export const useMediaRecorder = (
 
   const getSupportedMimeType = useCallback(() => {
     const candidates = [
+      "video/mp4;codecs=avc1,mp4a.40.2", // H.264 + AAC (가장 호환성 좋음)
       "video/mp4;codecs=h264,aac",
-      "video/mp4;codecs=h264,opus",
+      "video/mp4;codecs=avc1",
       "video/mp4",
       "video/webm;codecs=h264,opus",
+      "video/webm;codecs=vp8,opus",
       "video/webm",
     ];
+
+    console.log("🔍 브라우저 지원 MIME 타입 확인:");
+    candidates.forEach((type) => {
+      const supported = MediaRecorder.isTypeSupported(type);
+      console.log(`  ${supported ? "✅" : "❌"} ${type}`);
+    });
 
     const supported = candidates.find((type) =>
       MediaRecorder.isTypeSupported(type)
     );
 
     if (supported) {
-      console.log("선택된 MIME 타입:", supported);
+      console.log("✅ 최종 선택된 MIME 타입:", supported);
+
+      // Opus 오디오 코덱 경고
+      if (supported.includes("opus")) {
+        console.warn(
+          "⚠️ Opus 오디오 코덱으로 녹화됩니다.",
+          "\n일부 플레이어에서 재생이 안 될 수 있습니다.",
+          "\n백엔드에서 AAC 변환이 필요할 수 있습니다."
+        );
+      }
+
+      // WebM이 선택된 경우 경고
+      if (supported.includes("webm")) {
+        console.warn(
+          "⚠️ 브라우저가 MP4를 지원하지 않아 WebM으로 녹화됩니다.",
+          "\n백엔드 AI 분석이 제대로 작동하지 않을 수 있습니다.",
+          "\nSafari 또는 Edge 브라우저 사용을 권장합니다."
+        );
+      }
     } else {
       console.warn("지원하는 MIME 타입이 없습니다. 기본 형식 사용");
     }
