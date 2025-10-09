@@ -20,6 +20,14 @@ import DeviceSelector from "./components/DeviceSelector";
 import VideoPreview from "./components/VideoPreview";
 import ConfirmModal from "@/components/modals/ConfirmModal";
 import AlertModal from "@/components/modals/AlertModal";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 import { getInterviewQuestion } from "@/apis/interview";
 import {
@@ -76,6 +84,11 @@ const Interview = () => {
   // 권한 거부 모달 상태
   const [showPermissionDeniedModal, setShowPermissionDeniedModal] =
     useState(false);
+
+  // 권한 설정 방법 안내 모달 상태
+  const [showPermissionGuideModal, setShowPermissionGuideModal] =
+    useState(false);
+  const [permissionGuideMessage, setPermissionGuideMessage] = useState("");
 
   // 면접 진행 상태
   const [interviewQuestion, setInterviewQuestion] = useState(
@@ -485,53 +498,7 @@ const Interview = () => {
       return;
     }
 
-    const toastId = createTrackedToast("카메라와 마이크 권한을 확인해주세요!", {
-      description:
-        "화상 면접을 진행하기 위해 카메라와 마이크 권한이 필수입니다.",
-      action: {
-        label: "권한 요청",
-        onClick: async () => {
-          try {
-            console.log("권한 요청 시작...");
-            console.log("현재 권한 상태:", permissions);
-
-            // 브라우저 권한 팝업을 다시 띄우기 위해 getUserMedia 직접 호출
-            const stream = await navigator.mediaDevices.getUserMedia({
-              video: true,
-              audio: true,
-            });
-
-            console.log("권한 요청 성공, 스트림:", stream);
-
-            // 성공 시 스트림 정리 후 새로 시작
-            stream.getTracks().forEach((t) => t.stop());
-            await refreshDevices();
-            await startStream();
-            toast.dismiss(toastId);
-
-            toast.success("권한이 허용되었습니다!");
-          } catch (error) {
-            console.error("권한 요청 실패:", error);
-            if (error instanceof Error && error.name === "NotAllowedError") {
-              toast.error("권한이 차단되었습니다", {
-                description:
-                  "브라우저 주소창의 자물쇠 아이콘을 클릭하여 권한을 허용해주세요. 또는 아래 '브라우저 설정 안내' 버튼을 클릭하세요.",
-                duration: 10000,
-              });
-            } else {
-              toast.error("권한 요청 실패", {
-                description: `에러: ${
-                  error instanceof Error ? error.message : "알 수 없는 오류"
-                }`,
-              });
-            }
-          }
-        },
-      },
-      duration: Infinity,
-    });
-
-    // 브라우저 설정 안내 토스트도 함께 표시
+    // 브라우저 설정 안내 토스트 표시
     createTrackedToast("브라우저 설정 안내", {
       description:
         "권한 요청이 실패하면 브라우저 주소창의 자물쇠 아이콘을 클릭하여 직접 설정할 수 있습니다.",
@@ -561,10 +528,9 @@ const Interview = () => {
               "브라우저 설정 → 개인정보 보호 → 카메라/마이크 권한 허용";
           }
 
-          createTrackedInfoToast("권한 설정 방법", {
-            description: message,
-            duration: 15000,
-          });
+          // Dialog로 표시
+          setPermissionGuideMessage(message);
+          setShowPermissionGuideModal(true);
         },
       },
       duration: 10000,
@@ -590,7 +556,6 @@ const Interview = () => {
 
     return () => {
       clearTimeout(timer);
-      toast.dismiss(toastId);
       // 스트림 정리
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((t) => t.stop());
@@ -854,6 +819,26 @@ const Interview = () => {
         onConfirm={() => setShowPermissionDeniedModal(false)}
         onCancel={() => window.location.reload()}
       />
+
+      {/* 권한 설정 방법 안내 Dialog */}
+      <Dialog
+        open={showPermissionGuideModal}
+        onOpenChange={setShowPermissionGuideModal}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>권한 설정 방법</DialogTitle>
+            <DialogDescription className="whitespace-pre-line text-left">
+              {permissionGuideMessage}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end mt-4">
+            <Button onClick={() => setShowPermissionGuideModal(false)}>
+              확인
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* 시간 제한 강제 중지 모달 */}
       <ConfirmModal
