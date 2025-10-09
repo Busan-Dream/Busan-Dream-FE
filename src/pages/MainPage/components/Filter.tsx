@@ -83,7 +83,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
     if (!tag) return;
     setTagList(prev => {
       const exists = prev.some(t => norm(t) === norm(tag));
-      return exists ? prev : [...prev, tag];
+      return exists ? prev.filter(t => norm(t) !== norm(tag)) : [...prev, tag];
     });
   };
 
@@ -142,26 +142,37 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
   };
 
   // 추천 태그/옵션 클릭 → 화면 태그 + 부모 상태 동시 반영
+  // 근무분야
   const handleClickPart = (value: string) => {
     addTag(value);
-    addPartKeyword("postingPart", value);
+    addPartKeyword("postingPart", value.replace("직", ""));
   };
+
+  // 전형
   const handleClickField = (value: string) => {
     addTag(value);
     addPartKeyword("postingField", value);
   };
+
+  // 고용형태
   const handleClickEmployment = (value: string) => {
     addTag(value);
     addPartKeyword("postingEmploymentType", value);
   };
+
+  // 학력
   const handleClickEducation = (value: string) => {
     addTag(value);
     addPartKeyword("postingEducation", value);
   };
+
+  // 상태
   const handleClickStatus = (value: string) => {
     addTag(value);
     addPartKeyword("status", value);
   };
+
+  // 요구조건
   const handleClickPostingTag = (value: string) => {
     addTag(value);
     addPartKeyword("postingTag", value);
@@ -274,10 +285,10 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
               return (
                 <span
                   key={part}
-                  className={`inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full px-[15px] font-semibold ${
+                  className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold select-none ${
                     isSelected
-                      ? "bg-blue-500 text-white"
-                      : "border-1 border-gray-300 text-gray-400"
+                      ? "border-1 border-blue-500 bg-blue-500 text-white"
+                      : "border-1 border-gray-300 bg-white text-gray-400"
                   }`}
                   onClick={() => handleClickPart(part)}
                 >
@@ -300,10 +311,10 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
                 return (
                   <span
                     key={field}
-                    className={`inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full px-[15px] font-semibold ${
+                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold select-none ${
                       isSelected
-                        ? "bg-blue-500 text-white"
-                        : "border-1 border-gray-300 text-gray-400"
+                        ? "border-1 border-blue-500 bg-blue-500 text-white"
+                        : "border-1 border-gray-300 bg-white text-gray-400"
                     }`}
                     onClick={() => handleClickField(field)}
                   >
@@ -323,10 +334,10 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
                 return (
                   <span
                     key={type}
-                    className={`inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full px-[15px] font-semibold ${
+                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold select-none ${
                       isSelected
-                        ? "bg-blue-500 text-white"
-                        : "border-1 border-gray-300 text-gray-400"
+                        ? "border-1 border-blue-500 bg-blue-500 text-white"
+                        : "border-1 border-gray-300 bg-white text-gray-400"
                     }`}
                     onClick={() => handleClickEmployment(type)}
                   >
@@ -350,10 +361,10 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
                 return (
                   <span
                     key={edu}
-                    className={`inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full px-[15px] font-semibold ${
+                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold select-none ${
                       isSelected
-                        ? "bg-blue-500 text-white"
-                        : "border-1 border-gray-300 text-gray-400"
+                        ? "border-1 border-blue-500 bg-blue-500 text-white"
+                        : "border-1 border-gray-300 bg-white text-gray-400"
                     }`}
                     onClick={() => handleClickEducation(edu)}
                   >
@@ -373,10 +384,10 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
                 return (
                   <span
                     key={stat}
-                    className={`inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full px-[15px] font-semibold ${
+                    className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold select-none ${
                       isSelected
-                        ? "bg-blue-500 text-white"
-                        : "border-1 border-gray-300 text-gray-400"
+                        ? "border-1 border-blue-500 bg-blue-500 text-white"
+                        : "border-1 border-gray-300 bg-white text-gray-400"
                     }`}
                     onClick={() => handleClickStatus(stat)}
                   >
@@ -399,10 +410,10 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
               return (
                 <span
                   key={tag}
-                  className={`inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full px-[15px] font-semibold ${
+                  className={`inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full px-[15px] font-semibold select-none ${
                     isSelected
-                      ? "bg-blue-500 text-white"
-                      : "border-1 border-gray-300 text-gray-400"
+                      ? "border-1 border-blue-500 bg-blue-500 text-white"
+                      : "border-1 border-gray-300 bg-white text-gray-400"
                   }`}
                   onClick={() => handleClickPostingTag(tag)}
                 >
@@ -414,12 +425,12 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
         </div>
 
         {/* 검색 태그(화면 표시용) */}
-        <div className="grid h-[70px] grid-cols-[1fr_88px] items-center gap-5 pr-5 pl-[30px]">
+        <div className="grid min-h-[70px] grid-cols-[1fr_88px] items-center gap-5 py-5 pr-5 pl-[30px]">
           <div className="flex flex-wrap gap-[10px]">
             {tagList.map((tag, index) => (
               <span
                 key={index}
-                className="inline-flex h-[30px] cursor-pointer select-none items-center justify-center rounded-full border-1 border-blue-500 px-[15px] font-semibold text-blue-500"
+                className="inline-flex h-[30px] cursor-pointer items-center justify-center rounded-full border-1 border-blue-500 px-[15px] font-semibold text-blue-500 select-none"
                 onClick={() => handleRemoveTag(tag)}
               >
                 {tag}
