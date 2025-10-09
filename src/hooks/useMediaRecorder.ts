@@ -22,8 +22,21 @@ export const useMediaRecorder = (
       "video/mp4;codecs=h264,aac",
       "video/mp4;codecs=h264,opus",
       "video/mp4",
+      "video/webm;codecs=h264,opus",
+      "video/webm",
     ];
-    return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || "";
+
+    const supported = candidates.find((type) =>
+      MediaRecorder.isTypeSupported(type)
+    );
+
+    if (supported) {
+      console.log("선택된 MIME 타입:", supported);
+    } else {
+      console.warn("지원하는 MIME 타입이 없습니다. 기본 형식 사용");
+    }
+
+    return supported || "";
   }, []);
 
   const startRecording = useCallback(async () => {

@@ -4,7 +4,7 @@ import { debugLog } from "@/utils/debug";
 interface UseVideoUploadReturn {
   savedVideoUrl: string | null;
   saveVideoLocally: (videoBlob: Blob) => string;
-  downloadVideo: (videoBlob?: Blob) => Promise<boolean>;
+  downloadVideo: (videoBlob?: Blob) => void;
   restoreVideoFromSession: () => string | null;
 }
 
@@ -77,10 +77,10 @@ export const useVideoUpload = (): UseVideoUploadReturn => {
 
   // 영상 다운로드
   const downloadVideo = useCallback(
-    async (videoBlob?: Blob): Promise<boolean> => {
+    (videoBlob?: Blob) => {
       if (!videoBlob && !savedVideoUrl) {
         console.error("다운로드할 영상이 없습니다.");
-        return false;
+        return;
       }
 
       try {
@@ -94,25 +94,27 @@ export const useVideoUpload = (): UseVideoUploadReturn => {
           document.body.removeChild(link);
           URL.revokeObjectURL(url);
           debugLog("영상 다운로드 완료");
-          return true;
         } else {
           // savedVideoUrl에서 Blob 가져오기
-          const response = await fetch(savedVideoUrl!);
-          const blobData = await response.blob();
-          const url = URL.createObjectURL(blobData);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `interview-${Date.now()}.mp4`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-          debugLog("영상 다운로드 완료");
-          return true;
+          fetch(savedVideoUrl!)
+            .then((response) => response.blob())
+            .then((blobData) => {
+              const url = URL.createObjectURL(blobData);
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = `interview-${Date.now()}.mp4`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+              debugLog("영상 다운로드 완료");
+            })
+            .catch((error) => {
+              console.error("영상 다운로드 실패:", error);
+            });
         }
       } catch (error) {
         console.error("영상 다운로드 실패:", error);
-        return false;
       }
     },
     [savedVideoUrl]
