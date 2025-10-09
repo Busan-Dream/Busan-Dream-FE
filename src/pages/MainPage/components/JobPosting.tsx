@@ -14,6 +14,7 @@ const JobPosting = () => {
     postingTag: [],
     page: 1,
   });
+
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   const scrollToHeading = () => {
