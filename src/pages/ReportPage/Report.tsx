@@ -11,6 +11,7 @@ import VoiceAnalysis from "./components/VoiceAnalysis";
 import RepetitiveVocabulary from "./components/RepetitiveVocabulary";
 import VideoAnalysis from "./components/VideoAnalysis";
 import DetailedFeedback from "./components/DetailedFeedback";
+import AnalysisSkeleton from "./components/AnalysisSkeleton";
 import SplashCursor from "@/components/ReactBits/SplashCursor/SplashCursor";
 
 // 이미지 import
@@ -154,14 +155,15 @@ const Report = () => {
         {savedVideoUrl && (
           <div className="flex justify-end mt-4">
             <button
-              onClick={() => {
-                downloadVideo();
-                toast.info("영상 다운로드가 완료되었습니다!", {
-                  action: {
-                    label: "확인",
-                    onClick: () => {},
-                  },
-                });
+              onClick={async () => {
+                const success = await downloadVideo();
+                if (success) {
+                  toast.success("영상 다운로드가 완료되었습니다!");
+                } else {
+                  toast.error("영상 다운로드에 실패했습니다.", {
+                    description: "다시 시도해주세요.",
+                  });
+                }
               }}
               className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-lg text-sm flex items-center gap-2 transition-colors"
               title="녹화된 영상 다운로드"
@@ -193,11 +195,35 @@ const Report = () => {
         ) : (
           <>
             <ScoreSection />
-            {individualStatus.audio === "completed" && <VoiceAnalysis />}
-            {individualStatus.audio === "completed" && <RepetitiveVocabulary />}
-            {individualStatus.video === "completed" && <VideoAnalysis />}
-            {(individualStatus.video === "completed" ||
-              individualStatus.audio === "completed") && <DetailedFeedback />}
+
+            {/* 음성 분석 결과 */}
+            {individualStatus.audio === "analyzing" ? (
+              <>
+                <AnalysisSkeleton type="audio" />
+                <AnalysisSkeleton type="vocabulary" />
+              </>
+            ) : individualStatus.audio === "completed" ? (
+              <>
+                <VoiceAnalysis />
+                <RepetitiveVocabulary />
+              </>
+            ) : null}
+
+            {/* 영상 분석 결과 */}
+            {individualStatus.video === "analyzing" ? (
+              <AnalysisSkeleton type="video" />
+            ) : individualStatus.video === "completed" ? (
+              <VideoAnalysis />
+            ) : null}
+
+            {/* 상세 피드백 */}
+            {individualStatus.video === "analyzing" ||
+            individualStatus.audio === "analyzing" ? (
+              <AnalysisSkeleton type="feedback" />
+            ) : individualStatus.video === "completed" ||
+              individualStatus.audio === "completed" ? (
+              <DetailedFeedback />
+            ) : null}
           </>
         )}
       </article>
