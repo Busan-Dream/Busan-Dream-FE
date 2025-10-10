@@ -112,7 +112,7 @@ const PolicyContent = ({ policyBusan = "부산 내" }: PolicyContentProps) => {
         const categoryPolicies = policies[category.key];
 
         return (
-          <div key={category.key} className="space-y-6">
+          <div key={category.key} className="space-y-6 pt-10">
             {/* 카테고리 헤더 */}
             <PolicyCardHeader
               category={category.key}
