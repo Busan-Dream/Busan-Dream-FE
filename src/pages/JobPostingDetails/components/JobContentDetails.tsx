@@ -27,8 +27,13 @@ const JobContentDetails = ({
         <span className="text-base/24px text-gray-500">
           <ul className="list-disc space-y-2 pl-5">
             {items.map((item, idx) => {
-              if (item.startsWith(">")) {
-                // > 있으면 하위 리스트
+              if (item.startsWith(">>")) {
+                return (
+                  <ul key={idx} className="list-disc space-y-2 pl-10">
+                    <li>{item.replace(/^>>/, "").trim()}</li>
+                  </ul>
+                );
+              } else if (item.startsWith(">")) {
                 return (
                   <ul key={idx} className="list-disc space-y-2 pl-5">
                     <li>{item.replace(/^>/, "").trim()}</li>
