@@ -76,6 +76,7 @@ export default function Carousel({
   const x = useMotionValue(0);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isResetting, setIsResetting] = useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -147,6 +148,8 @@ export default function Carousel({
         setCurrentIndex((prev) => Math.max(prev - 1, 0));
       }
     }
+
+    setTimeout(() => setIsDragging(false), 100);
   };
 
   const dragProps = loop
@@ -180,6 +183,7 @@ export default function Carousel({
           }px 50%`,
           x,
         }}
+        onDragStart={() => setIsDragging(true)}
         onDragEnd={handleDragEnd}
         animate={{ x: -(currentIndex * trackItemOffset) }}
         transition={effectiveTransition}
@@ -208,7 +212,12 @@ export default function Carousel({
                 ...(round && { borderRadius: "50%" }),
               }}
               transition={effectiveTransition}
-              onClick={() => {
+              onClick={(e) => {
+                if (isDragging) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  return;
+                }
                 window.open(item.link, "_blank");
               }}
             >
