@@ -39,21 +39,18 @@ const DEFAULT_ITEMS: CarouselItem[] = [
   },
   {
     title: "취업연수생 | 인턴 체험",
-    description:
-      "만29세 이하를 위한 취업지원 프로그램",
+    description: "만29세 이하를 위한 취업지원 프로그램",
     id: 3,
     icon: <ShortcutIcon className="h-[14px] w-[14px] text-white" />,
     link: "https://www.busanjob.net/08_wyou/wyou05_0.asp",
   },
   {
     title: "중개보수 및 이사비 지원",
-    description:
-      "중위소득 120% 이하를 위한 실제 이사비 지원",
+    description: "중위소득 120% 이하를 위한 실제 이사비 지원",
     id: 4,
     icon: <ShortcutIcon className="h-[14px] w-[14px] text-white" />,
     link: "https://young.busan.go.kr/index.nm?menuCd=271",
   },
-
 ];
 
 const DRAG_BUFFER = 0;
@@ -169,9 +166,6 @@ export default function Carousel({
         width: `${baseWidth}px`,
         ...(round && { height: `${baseWidth}px` }),
       }}
-      onClick={() => {
-        window.open(carouselItems[currentIndex].link, "_blank");
-      }}
     >
       <motion.div
         className="flex"
@@ -214,6 +208,9 @@ export default function Carousel({
                 ...(round && { borderRadius: "50%" }),
               }}
               transition={effectiveTransition}
+              onClick={() => {
+                window.open(item.link, "_blank");
+              }}
             >
               <div className={`${round ? "p-0 m-0" : "mb-4 p-5"}`}>
                 <span className="flex h-[28px] w-[28px] items-center justify-center rounded-full bg-[#5F1984]/60">
