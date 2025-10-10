@@ -85,7 +85,7 @@ const DetailedFeedback = () => {
       {Object.keys(sentimentData).length > 0 && (
         <Card className="mb-8 !bg-transparent !border-0 !shadow-none">
           <CardHeader>
-            <CardTitle className="text-lg">감정 분석 결과</CardTitle>
+            <CardTitle className="text-bold">감정 분석 결과</CardTitle>
             <CardDescription className="text-gray-500 font-light text-md">
               면접 중 감정 상태와 스트레스 수준을 분석한 결과입니다
             </CardDescription>

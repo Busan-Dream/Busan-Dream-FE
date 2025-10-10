@@ -1,5 +1,4 @@
 import Banner from "./components/Banner";
-import Filter from "./components/Filter";
 import JobPosting from "./components/JobPosting";
 import Carousel from "@/components/ReactBits/Carousel";
 
@@ -12,7 +11,7 @@ const Main = () => {
         className="mt-[30px] mb-[50px] h-[250px] flex gap-6"
       >
         <Banner />
-        <div style={{ height: "100%", position: "relative" }}>
+        <div className="h-full relative">
           <Carousel
             baseWidth={300}
             autoplay={true}

@@ -14,10 +14,10 @@ interface PolicyHeaderProps {
 const PolicyHeader = ({ isFromBusan, category }: PolicyHeaderProps) => {
   return (
     <section
-      className="w-full mx-auto flex justify-center px-10 max-sm:px-5  py-10 relative h-fit"
+      className="w-full mx-auto flex justify-center px-10 max-sm:px-5  pt-10 relative h-fit"
       style={{
-        background: `url('/src/assets/images/policy-gradient-bg.png') no-repeat center center`,
-        backgroundSize: "cover",
+        background:
+          "linear-gradient(to top, rgba(233, 87, 155, 0) 0%, rgba(233, 87, 155, 0.08) 50%, rgba(166, 0, 255, 0.2) 100%)",
       }}
     >
       <div className="max-w-[1200px] w-full flex justify-between items-end border-b border-gray-200">
@@ -45,11 +45,7 @@ const PolicyHeader = ({ isFromBusan, category }: PolicyHeaderProps) => {
           </p>
         </div>
 
-        <img
-          src={Boogi}
-          alt="부기"
-          className="w-[10vw] absolute right-0 -translate-x-full translate-y-[20px]"
-        />
+        <img src={Boogi} alt="부기" className="w-[10vw] translate-y-[20px]" />
       </div>
     </section>
   );
