@@ -47,7 +47,7 @@ const Banner = () => {
         <div className="mt-8 max-w-[600px] overflow-hidden">
           <LogoLoop
             logos={partnerLogos}
-            speed={150}
+            speed={80}
             direction="left"
             logoHeight={18}
             gap={40}
