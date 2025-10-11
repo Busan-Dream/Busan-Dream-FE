@@ -31,7 +31,7 @@ const JobPostingList = ({
         queryKey: ["postingList", searchKeywords],
         queryFn: async () => {
           const res = await axiosInstance.post(
-            "/busan/posting/search",
+            "/busan/posting",
             searchKeywords
           );
           return res.data as JobPostingListData[];
@@ -41,7 +41,7 @@ const JobPostingList = ({
         queryKey: ["postingMaxPage", searchKeywords],
         queryFn: async () => {
           const res = await axiosInstance.post(
-            "/busan/posting/organ-page",
+            "/busan/posting/page-info",
             searchKeywords
           );
           return res.data as { maxPage: number };
@@ -52,7 +52,7 @@ const JobPostingList = ({
 
   const postingList = results[0].data;
   const maxPage = results[1].data?.maxPage ?? 1;
-  const isLoading = results.some(r => r.isLoading);
+  const isLoading = results.some((r) => r.isLoading);
 
   // 채용 공고 상세 조회
   const handleClickJobPostingDetail = (postingId: number) => {

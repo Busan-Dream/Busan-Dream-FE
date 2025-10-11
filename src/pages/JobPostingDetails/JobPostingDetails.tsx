@@ -29,7 +29,7 @@ const JobPostingDetails = () => {
   const { data } = useQuery({
     queryKey: ["job-content", id],
     queryFn: async () => {
-      const response = await axiosInstance.get(`/busan/posting/post/${id}`);
+      const response = await axiosInstance.get(`/busan/posting/${id}`);
 
       return response.data;
     },
