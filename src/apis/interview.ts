@@ -60,7 +60,7 @@ export const getInterviewQuestion = async (
   postingPart: string
 ) => {
   try {
-    const response = await axiosInstance.post("/busan/interview/question", {
+    const response = await axiosInstance.post("/busan/interview", {
       postingOrgan,
       postingPart,
     });

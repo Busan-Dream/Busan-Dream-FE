@@ -43,7 +43,7 @@ export interface PolicyListRequest {
 export const getPolicyList = async (
   params: PolicyListRequest
 ): Promise<PolicyListResponse> => {
-  const response = await axiosInstance.post("/busan/policy/list", params);
+  const response = await axiosInstance.post("/busan/policy", params);
   return response.data;
 };
 
@@ -65,7 +65,7 @@ export const getPolicyDetailListByCategory = async (
   category: PolicyPart,
   params: PolicyListRequest
 ): Promise<{ policies: Policy[]; maxPage: number }> => {
-  const response = await axiosInstance.post("/busan/policy/detail-list", {
+  const response = await axiosInstance.post("/busan/policy/detail", {
     ...params,
     category,
   });
