@@ -64,7 +64,7 @@ const WrittenTestChart = ({
   const { mutate, isPending } = useMutation<ApiRow[], unknown, RequestBody>({
     mutationFn: async body => {
       const { data } = await axiosInstance.post<ApiRow[]>(
-        "/busan/posting/post-chart",
+        "/busan/posting/chart",
         body
       );
       return data;
