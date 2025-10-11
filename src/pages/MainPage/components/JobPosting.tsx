@@ -51,7 +51,7 @@ const JobPosting = () => {
           </h2>
           <p className="space-x-1 text-sm text-gray-400">
             <span>업데이트 일시</span>
-            <span>2025.08.20.</span>
+            <span>2025.10.12.</span>
           </p>
         </div>
         <JobPostingList
