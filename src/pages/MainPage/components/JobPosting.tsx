@@ -1,9 +1,11 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Filter from "./Filter";
 import JobPostingList from "./JobPostingList";
 
+const KEYWORDS_STORAGE_KEY = "searchKeywords";
+
 const JobPosting = () => {
-  const [searchKeywords, setSearchKeywords] = useState<SearchTag>({
+  const DEFAULT_SEARCH_KEYWORDS: SearchTag = {
     postingOrgan: "전체",
     postingPart: [],
     postingField: [],
@@ -13,10 +15,35 @@ const JobPosting = () => {
     status: [],
     postingTag: [],
     page: 1,
-  });
+  };
+
+  const loadSearchKeywords = (): SearchTag => {
+    if (typeof window === "undefined") {
+      return DEFAULT_SEARCH_KEYWORDS;
+    }
+
+    try {
+      const saved = sessionStorage.getItem(KEYWORDS_STORAGE_KEY);
+
+      return saved ? JSON.parse(saved) : DEFAULT_SEARCH_KEYWORDS;
+    } catch {
+      return DEFAULT_SEARCH_KEYWORDS;
+    }
+  };
+
+  const [searchKeywords, setSearchKeywords] =
+    useState<SearchTag>(loadSearchKeywords);
 
   const headingRef = useRef<HTMLHeadingElement>(null);
 
+  useEffect(() => {
+    sessionStorage.setItem(
+      KEYWORDS_STORAGE_KEY,
+      JSON.stringify(searchKeywords)
+    );
+  }, [searchKeywords]);
+
+  // 채용 공고 헤더로 이동
   const scrollToHeading = () => {
     const el = headingRef.current;
     if (!el) return;

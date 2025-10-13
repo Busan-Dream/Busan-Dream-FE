@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BtcLogo from "@/assets/images/btc-logo.svg?react";
 import BtoLogo from "@/assets/images/bto-logo.svg?react";
 import BmcLogo from "@/assets/images/bmc-logo.svg?react";
@@ -70,9 +70,29 @@ const postingTags = [
   "블라인드",
 ];
 
+const TAG_STORAGE_KEY = "searchTagList";
+
 const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
+  const loadTags = (): string[] => {
+    if (typeof window === "undefined") {
+      return [];
+    }
+
+    try {
+      const saved = sessionStorage.getItem(TAG_STORAGE_KEY);
+
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  };
+
   const [keyword, setKeyword] = useState<string>("");
-  const [tagList, setTagList] = useState<string[]>([]);
+  const [tagList, setTagList] = useState<string[]>(loadTags);
+
+  useEffect(() => {
+    sessionStorage.setItem(TAG_STORAGE_KEY, JSON.stringify(tagList));
+  }, [tagList]);
 
   // 비교용 전처리(공백/대소문자 통일)
   const norm = (s: string) => s.trim().toLowerCase();
@@ -201,6 +221,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
   // 초기화 (부모 상태도 초기화)
   const handleClickSearchReset = () => {
     setTagList([]);
+    sessionStorage.removeItem(TAG_STORAGE_KEY);
     setSearchKeyword(prev => ({
       ...prev,
       postingPart: [],
