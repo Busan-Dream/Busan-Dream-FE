@@ -200,22 +200,34 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
 
   // 화면 태그 삭제
   const handleRemoveTag = (tag: string) => {
+    const asPart = (s: string) => s.replace(/직$/, ""); // "일반직" -> "일반"
+    const match = (a?: string, b?: string) =>
+      (a ?? "").trim().toLowerCase() === (b ?? "").trim().toLowerCase();
+
     setSearchKeyword(prevKW => {
-      const removeFrom = (arr: string[]) =>
-        arr.filter(v => norm(v) !== norm(tag));
+      const removeFrom = (arr: string[], needle: string) =>
+        arr.filter(v => !match(v, needle));
+
+      const tagPart = asPart(tag);
+
       return {
         ...prevKW,
-        postingPart: removeFrom(prevKW.postingPart),
-        postingField: removeFrom(prevKW.postingField),
-        postingEmploymentType: removeFrom(prevKW.postingEmploymentType),
-        postingEducation: removeFrom(prevKW.postingEducation),
-        status: removeFrom(prevKW.status),
-        postingTag: removeFrom(prevKW.postingTag),
-        keyword: norm(prevKW.keyword) === norm(tag) ? "" : prevKW.keyword,
+        postingPart: removeFrom(prevKW.postingPart, tagPart),
+        postingField: removeFrom(prevKW.postingField, tag),
+        postingEmploymentType: removeFrom(prevKW.postingEmploymentType, tag),
+        postingEducation: removeFrom(prevKW.postingEducation, tag),
+        status: removeFrom(prevKW.status, tag),
+        postingTag: removeFrom(prevKW.postingTag, tag),
+        keyword:
+          match(prevKW.keyword, tag) || match(prevKW.keyword, tagPart)
+            ? ""
+            : prevKW.keyword,
+
         page: 1,
       };
     });
-    setTagList(prev => prev.filter(t => norm(t) !== norm(tag)));
+
+    setTagList(prev => prev.filter(t => !match(t, tag)));
   };
 
   // 초기화 (부모 상태도 초기화)
