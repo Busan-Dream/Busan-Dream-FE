@@ -68,7 +68,7 @@ const JobPosting = () => {
         />
       </div>
       {/* 채용 공고 */}
-      <section>
+      <section className="pb-25">
         <div className="title mb-[30px] flex items-center justify-between">
           <h2
             ref={headingRef}

@@ -77,7 +77,7 @@ const JobPostingDetails = () => {
   } = data;
 
   return (
-    <div className="pb-25">
+    <div className="pb-50">
       <div className="flex h-20 items-center justify-between">
         <button onClick={handleClickBack}>
           <IoIosArrowRoundBack className="-ml-[10px] size-12 text-gray-700" />
