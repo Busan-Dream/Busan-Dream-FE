@@ -357,7 +357,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
               })}
             </div>
           </div>
-          <div className="grid h-auto w-full grid-cols-[80px_1fr] items-center gap-5 border-r-1 border-r-gray-200 px-[30px] py-5">
+          <div className="grid h-auto w-full grid-cols-[80px_1fr] items-center gap-5 border-r-gray-200 px-[30px] py-5">
             <span className="w-20 text-center text-base">고용형태</span>
             <div className="flex flex-wrap gap-[10px]">
               {employmentTypes.map(type => {
@@ -407,7 +407,7 @@ const Filter = ({ searchKeywords, setSearchKeyword }: FilterProps) => {
               })}
             </div>
           </div>
-          <div className="grid h-auto w-full grid-cols-[80px_1fr] items-center gap-5 border-r-1 border-r-gray-200 px-[30px] py-5">
+          <div className="grid h-auto w-full grid-cols-[80px_1fr] items-center gap-5 border-r-gray-200 px-[30px] py-5">
             <span className="w-20 text-center text-base">상태</span>
             <div className="flex flex-wrap gap-[10px]">
               {status.map(stat => {
