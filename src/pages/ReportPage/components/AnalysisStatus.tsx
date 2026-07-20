@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { useAnalysis } from "@/contexts/AnalysisContext";
+import { useAnalysisStore } from "@/stores/useAnalysisStore";
 import SplitText from "@/components/ReactBits/SplitText/SplitText";
 
 interface AnalysisStatusProps {
@@ -13,7 +13,8 @@ const AnalysisStatus = ({
   postingPart,
   characterImage,
 }: AnalysisStatusProps) => {
-  const { analysisStatus, individualStatus } = useAnalysis();
+  const analysisStatus = useAnalysisStore((state) => state.analysisStatus);
+  const individualStatus = useAnalysisStore((state) => state.individualStatus);
 
   // 상태에 따른 메시지 결정
   const getStatusMessage = () => {

@@ -1,10 +1,10 @@
 import SectionTitle from "@/components/SectionTitle";
 import AudioIcon from "@/assets/icons/audio-icon.svg";
 import AnalysisCard from "./AnalysisCard";
-import { useAnalysis } from "@/contexts/AnalysisContext";
+import { useAnalysisStore } from "@/stores/useAnalysisStore";
 
 const VoiceAnalysis = () => {
-  const { analysisResults } = useAnalysis();
+  const analysisResults = useAnalysisStore((state) => state.analysisResults);
   const audioData = analysisResults.audio;
 
   const voiceItems = [

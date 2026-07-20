@@ -1,9 +1,9 @@
 import SectionTitle from "@/components/SectionTitle";
 import TalkIcon from "@/assets/icons/talk-icon.svg";
-import { useAnalysis } from "@/contexts/AnalysisContext";
+import { useAnalysisStore } from "@/stores/useAnalysisStore";
 
 const RepetitiveVocabulary = () => {
-  const { analysisResults } = useAnalysis();
+  const analysisResults = useAnalysisStore((state) => state.analysisResults);
   const audioData = analysisResults.audio;
 
   // API에서 받은 자주 사용한 단어들

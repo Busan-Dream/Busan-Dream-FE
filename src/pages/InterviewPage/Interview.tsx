@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Square, Circle, Upload } from "lucide-react";
 
@@ -7,7 +7,7 @@ import { Square, Circle, Upload } from "lucide-react";
 import { useInterviewSetup } from "@/hooks/useInterviewSetup";
 import { useInterviewModals } from "@/hooks/useInterviewModals";
 import { useVideoUpload } from "@/hooks/useVideoUpload";
-import { useAnalysis } from "@/contexts/AnalysisContext";
+import { useAnalysisStore } from "@/stores/useAnalysisStore";
 
 // components
 import SectionTitle from "@/components/SectionTitle";
@@ -33,9 +33,10 @@ import {
 
 const Interview = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { postingOrgan, postingPart } = location.state || {};
-  const { startAnalysis } = useAnalysis();
+  const interviewTarget = useAnalysisStore((state) => state.interviewTarget);
+  const startAnalysis = useAnalysisStore((state) => state.startAnalysis);
+  const postingOrgan = interviewTarget?.postingOrgan;
+  const postingPart = interviewTarget?.postingPart;
 
   // 통합 훅 사용
   const {
@@ -202,7 +203,7 @@ const Interview = () => {
 
         try {
           startAnalysis(blob, interviewQuestion);
-          navigate("/report", { state: { postingOrgan, postingPart } });
+          navigate("/report");
         } catch {
           toast.error("분석을 시작할 수 없습니다.");
         }
@@ -236,7 +237,7 @@ const Interview = () => {
 
     try {
       startAnalysis(uploadedVideoBlob, interviewQuestion);
-      navigate("/report", { state: { postingOrgan, postingPart } });
+      navigate("/report");
     } catch (error) {
       console.error("분석 시작 실패:", error);
       toast.error("분석을 시작할 수 없습니다.");
@@ -255,7 +256,7 @@ const Interview = () => {
         });
 
         startAnalysis(timeLimitBlob, interviewQuestion);
-        navigate("/report", { state: { postingOrgan, postingPart } });
+        navigate("/report");
       } catch (error) {
         console.error("분석 시작 실패:", error);
         toast.error("분석을 시작할 수 없습니다.", {

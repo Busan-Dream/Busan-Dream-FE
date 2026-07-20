@@ -1,7 +1,6 @@
 import SectionTitle from "@/components/SectionTitle";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useAnalysis } from "@/contexts/AnalysisContext";
+import { useAnalysisStore } from "@/stores/useAnalysisStore";
 import { useVideoUpload } from "@/hooks/useVideoUpload";
 import { toast } from "sonner";
 import { Download } from "lucide-react";
@@ -29,9 +28,9 @@ import manGrayHairTada from "@/assets/images/Report/finish/man-gray-hair-tada.pn
 import manWhiteHairTada from "@/assets/images/Report/finish/man-white-hair-tada.png";
 
 const Report = () => {
-  const location = useLocation();
-  const { postingOrgan, postingPart } = location.state || {};
-  const { analysisStatus, individualStatus } = useAnalysis();
+  const analysisStatus = useAnalysisStore((state) => state.analysisStatus);
+  const individualStatus = useAnalysisStore((state) => state.individualStatus);
+  const interviewTarget = useAnalysisStore((state) => state.interviewTarget);
   const { downloadVideo, restoreVideoFromSession, savedVideoUrl } =
     useVideoUpload();
 
@@ -125,8 +124,8 @@ const Report = () => {
 
       <article className="w-full max-sm:px-4 max-sm:landscape:px-2 bg-[#F4F6FA] border border-gray-200 rounded-4xl">
         <AnalysisStatus
-          postingOrgan={postingOrgan}
-          postingPart={postingPart}
+          postingOrgan={interviewTarget?.postingOrgan}
+          postingPart={interviewTarget?.postingPart}
           characterImage={currentImage}
         />
 

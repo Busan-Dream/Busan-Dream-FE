@@ -1,5 +1,5 @@
 import SectionTitle from "@/components/SectionTitle";
-import { useAnalysis } from "@/contexts/AnalysisContext";
+import { useAnalysisStore } from "@/stores/useAnalysisStore";
 import SplitText from "@/components/ReactBits/SplitText/SplitText";
 import {
   Card,
@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 
 const DetailedFeedback = () => {
-  const { analysisResults } = useAnalysis();
+  const analysisResults = useAnalysisStore((state) => state.analysisResults);
   const videoData = analysisResults.video;
 
   if (!videoData) {

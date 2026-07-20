@@ -1,12 +1,15 @@
 import { Lightbulb } from "lucide-react";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { PieChart, Pie, Cell } from "recharts";
-import { useAnalysis } from "@/contexts/AnalysisContext";
+import { useAnalysisStore } from "@/stores/useAnalysisStore";
 import { calculateGrade, MAX_SCORE } from "@/constants/interview";
 
 const ScoreSection = () => {
-  const { analysisResults, interviewQuestion, individualStatus } =
-    useAnalysis();
+  const analysisResults = useAnalysisStore((state) => state.analysisResults);
+  const interviewQuestion = useAnalysisStore(
+    (state) => state.interviewQuestion
+  );
+  const individualStatus = useAnalysisStore((state) => state.individualStatus);
   const videoData = analysisResults.video;
   const audioData = analysisResults.audio;
 

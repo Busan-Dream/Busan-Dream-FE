@@ -1,10 +1,10 @@
 import SectionTitle from "@/components/SectionTitle";
 import VideoIcon from "@/assets/icons/video-icon.png";
 import AnalysisCard from "./AnalysisCard";
-import { useAnalysis } from "@/contexts/AnalysisContext";
+import { useAnalysisStore } from "@/stores/useAnalysisStore";
 
 const VideoAnalysis = () => {
-  const { analysisResults } = useAnalysis();
+  const analysisResults = useAnalysisStore((state) => state.analysisResults);
   const videoData = analysisResults.video;
 
   const videoItems = [

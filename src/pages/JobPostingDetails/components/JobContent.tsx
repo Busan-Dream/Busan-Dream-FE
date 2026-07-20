@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import JobContentDetails from "./JobContentDetails";
 import GradientText from "@/components/ReactBits/GradientText/GradientText";
 import InterviewPractice from "@/pages/MainPage/components/InterviewPractice";
+import { useAnalysisStore } from "@/stores/useAnalysisStore";
 
 interface JobContentProps {
   postingOrgan: string;
@@ -37,16 +38,18 @@ const JobContent = ({
   postingCondition,
 }: JobContentProps) => {
   const navigate = useNavigate();
+  const setInterviewTarget = useAnalysisStore(
+    (state) => state.setInterviewTarget
+  );
 
   // AI 면접 보기 페이지로 이동
   const handleClickAI = () => {
-    navigate("/interview", {
-      state: {
-        postingOrgan: postingOrgan,
-        postingField: postingField,
-        postingPart: postingPart,
-      },
+    setInterviewTarget({
+      postingOrgan,
+      postingField,
+      postingPart,
     });
+    navigate("/interview");
   };
 
   return (
